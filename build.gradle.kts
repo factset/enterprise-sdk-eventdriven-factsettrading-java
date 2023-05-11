@@ -23,7 +23,7 @@ dependencies {
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.7")
 
     testImplementation("org.mockito:mockito-inline:3.+")
-    testImplementation(platform("org.junit:junit-bom:5.9.2"))
+    testImplementation(platform("org.junit:junit-bom:5.9.3"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
