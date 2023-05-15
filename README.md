@@ -55,17 +55,13 @@ package com.factset.sdk.console;
 
 import com.factset.sdk.streaming.client.Subscription;
 import com.factset.sdk.streaming.client.WebsocketApiClient;
+import com.factset.sdk.streaming.factsettrading.OrderUpdateApi;
 import com.factset.sdk.utils.authentication.ConfidentialClient;
-import com.factset.sdk.utils.authentication.OAuth2Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletionException;
-
 public class Console {
 
-    // Set the loglevel to INFO or higher in resources/simplelogger.properties
     private static final Logger logger = LoggerFactory.getLogger("main");
 
     public static void main(String[] args) throws Exception {
@@ -77,13 +73,10 @@ public class Console {
                         .url("https://api.factset.com/trading/ems/v1")
                         .authorizer(confidentialClient)
                         .build()
-        );
+        ).connectAsync().join();
 
         // initialize the order update api
-        OrderUpdateApi api = client.connectAsync()
-                .thenApply(OrderUpdateApi::new)
-                .join();
-
+        OrderUpdateApi api = new OrderUpdateApi(client);
 
         // subscribe to order updates
         Subscription subscription = api.subscribeOrderUpdates((update, t) -> {
