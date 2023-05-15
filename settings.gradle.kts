@@ -1,2 +1,2 @@
-rootProject.name = "enterprise-sdk-streaming-order-updates"
+rootProject.name = "factsettrading"
 
