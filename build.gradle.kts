@@ -4,7 +4,6 @@ plugins {
 }
 
 group = "com.factset.sdk.streaming"
-val artifact = "factsettrading"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -45,7 +44,6 @@ tasks.compileJava {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = artifact
 
             // dependencies
             from(components["java"])
