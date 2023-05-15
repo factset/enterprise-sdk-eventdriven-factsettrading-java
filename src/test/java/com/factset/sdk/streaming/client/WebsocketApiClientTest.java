@@ -381,7 +381,7 @@ public class WebsocketApiClientTest {
                 }
         ).join();
 
-        client.disconnect().join();
+        client.disconnectAsync().join();
 
         assertInstanceOf(DisconnectException.class, exception.get());
 

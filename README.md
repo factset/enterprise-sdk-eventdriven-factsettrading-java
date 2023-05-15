@@ -101,7 +101,7 @@ public class Console {
         subscription.cancel();
 
         // close the websocket connection        
-        client.disconnect().join();
+        client.disconnectAsync().join();
     }
 }
 ```

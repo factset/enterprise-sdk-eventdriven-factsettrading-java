@@ -10,5 +10,5 @@ public interface ConnectableApiClient {
      * Disconnects the client.
      * The instance of the api client should be discarded after this call.
      */
-    CompletableFuture<Void> disconnect();
+    CompletableFuture<Void> disconnectAsync();
 }

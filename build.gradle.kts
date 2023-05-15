@@ -13,9 +13,9 @@ repositories {
 
 dependencies {
     implementation("com.factset.sdk:utils:1.+")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.15.0")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
@@ -23,8 +23,8 @@ dependencies {
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.7")
 
     testImplementation("org.mockito:mockito-inline:3.+")
-    testImplementation(platform("org.junit:junit-bom:5.9.2"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation(platform("org.junit:junit-bom:5.9.3"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")

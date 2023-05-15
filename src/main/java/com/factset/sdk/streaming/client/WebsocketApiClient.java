@@ -178,11 +178,11 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
                 logger.error("websocket failure: {}. response: {}", t.getMessage(), response);
 
-                // cleanup resource, if the websocket is in a failure state
-                cleanupResources(WebsocketCloseCode.PROTOCOL_ERROR, t.getMessage(), t);
-
-                // if an error occurs when opening the websocket we hand back the exception
-                if (!openWebSocketFuture.isDone()) {
+                if (openWebSocketFuture.isDone()) {
+                    // cleanup resource, if the websocket is in a failure state and was opened before
+                    cleanupResources(WebsocketCloseCode.PROTOCOL_ERROR, t.getMessage(), t);
+                } else {
+                    // if an error occurs when opening the websocket we hand back the exception
                     openWebSocketFuture.completeExceptionally(t);
                 }
             }
@@ -350,7 +350,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
     }
 
     @Override
-    public CompletableFuture<Void> disconnect() {
+    public CompletableFuture<Void> disconnectAsync() {
         return disconnect(WebsocketCloseCode.NORMAL_CLOSURE, "disconnect");
     }
 

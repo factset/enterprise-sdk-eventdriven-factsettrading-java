@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 class ExponentialBackoffRetry {
 
-    private static final Logger logger = LoggerFactory.getLogger("Retries");
+    private static final Logger logger = LoggerFactory.getLogger(ExponentialBackoffRetry.class);
 
     private static final Random random = new Random();
 
