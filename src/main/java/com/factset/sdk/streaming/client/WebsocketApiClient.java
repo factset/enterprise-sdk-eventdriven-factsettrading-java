@@ -23,7 +23,6 @@ import java.util.function.Function;
 
 import static com.factset.sdk.streaming.client.ExtractedMeta.extractMeta;
 
-@SuppressWarnings("NullableProblems")
 public class WebsocketApiClient implements StreamingApiClient, ConnectableApiClient {
 
     private final static Logger logger = LoggerFactory.getLogger(WebsocketApiClient.class);
@@ -169,12 +168,14 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
 
         WebSocketListener listener = new WebSocketListener() {
             @Override
+            @SuppressWarnings("NullableProblems")
             public void onOpen(WebSocket webSocket, Response response) {
                 logger.debug("websocket opened");
                 openWebSocketFuture.complete(webSocket);
             }
 
             @Override
+            @SuppressWarnings("NullableProblems")
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
                 logger.error("websocket failure: {}. response: {}", t.getMessage(), response);
 
@@ -188,6 +189,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
             }
 
             @Override
+            @SuppressWarnings("NullableProblems")
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 cleanupResources(code, reason, null);
                 disconnectFuture.complete(null);
@@ -196,6 +198,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
             }
 
             @Override
+            @SuppressWarnings("NullableProblems")
             public void onMessage(WebSocket webSocket, String text) {
                 handleMessage(text);
             }
