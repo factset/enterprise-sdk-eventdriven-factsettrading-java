@@ -111,7 +111,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
 
     @Override
     public CompletableFuture<WebsocketApiClient> connectAsync() {
-        return openNewWebsocket()
+        return ExponentialBackoffRetry.withRetries(this::openNewWebsocket, options.numberConnectRetries, timeoutScheduler)
                 .thenAccept(webSocket -> this.websocket = webSocket)
                 .thenCompose(ignored -> configureConnection())
                 .thenApply(ignored -> this);
@@ -120,9 +120,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
     private CompletableFuture<WebSocket> openNewWebsocket() {
         return getAccessToken()
                 .thenApply(this::prepareWebsocketRequest)
-                .thenCompose(request -> {
-                    return ExponentialBackoffRetry.withRetries(() -> openWebsocket(request), options.numberConnectRetries, timeoutScheduler);
-                });
+                .thenCompose(this::openWebsocket);
     }
 
     private CompletableFuture<Void> configureConnection() {
@@ -177,11 +175,11 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
             @Override
             @SuppressWarnings("NullableProblems")
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                logger.error("websocket failure: {}. response: {}", t.getMessage(), response);
+                logger.error("websocket failure: {}. response={}", t, response);
 
                 if (openWebSocketFuture.isDone()) {
                     // cleanup resource, if the websocket is in a failure state and was opened before
-                    cleanupResources(WebsocketCloseCode.PROTOCOL_ERROR, t.getMessage(), t);
+                    cleanupResources(WebsocketCloseCode.PROTOCOL_ERROR, t.toString(), t);
                 } else {
                     // if an error occurs when opening the websocket we hand back the exception
                     openWebSocketFuture.completeExceptionally(t);
@@ -194,7 +192,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
                 cleanupResources(code, reason, null);
                 disconnectFuture.complete(null);
 
-                logger.info("websocket closed: {} {}", code, reason);
+                logger.info("websocket closed: code={} reason={}", code, reason);
             }
 
             @Override
@@ -210,8 +208,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
     }
 
     private void cleanupResources(int code, String reason, Throwable t) {
-
-        logger.debug("cleanup called");
+        logger.debug("cleanup called: error={} code={} reason={}", t, code, reason);
 
         DisconnectException disconnectException;
         if (t != null) {
@@ -219,7 +216,6 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
         } else {
             disconnectException = new DisconnectException(code, reason);
         }
-
 
         responseListeners.values().forEach(listener -> {
             listener.future.completeExceptionally(disconnectException);
@@ -233,6 +229,8 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
         subscriptionListeners.clear();
 
         timeoutScheduler.shutdownNow();
+
+        disconnectFuture.complete(null);
     }
 
     private void handleMessage(String message) {
@@ -257,7 +255,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
             logger.debug("Received Unhandled Message: {}", meta.type);
 
         } catch (JsonProcessingException | NullPointerException e) {
-            logger.error("Could not parse incoming message: {} Message: {}", e.getMessage(), message);
+            logger.error("Could not parse incoming message: {} message={}", e, message);
         }
     }
 
@@ -358,6 +356,8 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
     }
 
     private CompletableFuture<Void> disconnect(int code, String reason) {
+        logger.debug("disconnect called: code={} reason={}", code, reason);
+
         websocket.close(code, reason);
         websocket = null;
 
@@ -413,7 +413,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
 
     private void send(Object o) throws JsonProcessingException {
         String json = this.json.writeValueAsString(o);
-        logger.debug("sending: {}", json);
+        logger.debug("Sending data: json={}", json);
         websocket.send(json);
     }
 
@@ -453,7 +453,7 @@ public class WebsocketApiClient implements StreamingApiClient, ConnectableApiCli
     }
 
     private CompletableFuture<Void> cancelSubscription(int id) {
-        logger.debug("Unsubscribe id: {}", id);
+        logger.debug("cancel subscription: id={}", id);
 
         // send the unsubscribe request
         return request(new UnsubscribeRequest(id), AckResponse.class).thenAccept(ackResponse -> {
