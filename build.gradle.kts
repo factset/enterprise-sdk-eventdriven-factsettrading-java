@@ -12,23 +12,23 @@ repositories {
 
 dependencies {
     implementation("com.factset.sdk:utils:1.+")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.15.1")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.1")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.1")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.1")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     implementation("org.slf4j:slf4j-api:2.0.7")
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.7")
 
-    testImplementation("org.mockito:mockito-inline:3.+")
+    testImplementation("org.mockito:mockito-inline:4.11.0")
     testImplementation(platform("org.junit:junit-bom:5.9.3"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
 
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    testCompileOnly("org.projectlombok:lombok:1.18.26")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
 }
 
 tasks.test {
