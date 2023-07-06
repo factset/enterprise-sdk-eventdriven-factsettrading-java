@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.factset.sdk.streaming"
+group = "com.factset.sdk.eventdriven"
 version = "1.0-SNAPSHOT"
 
 repositories {
