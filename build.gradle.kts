@@ -1,10 +1,16 @@
 plugins {
     java
     `maven-publish`
+    signing
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "1.0-SNAPSHOT"
+version = "0.1"
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
@@ -47,6 +53,7 @@ publishing {
 
             // dependencies
             from(components["java"])
+
             versionMapping {
                 usage("java-api") {
                     fromResolutionOf("runtimeClasspath")
@@ -55,6 +62,82 @@ publishing {
                     fromResolutionResult()
                 }
             }
+
+            pom {
+                name.set("FactSet Trading event-driven client library for Java")
+                description.set("Event-driven api client for the FactSet Trading API")
+                url.set("https://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0'")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("enterprisesdk")
+                        organization.set("FactSet")
+                        organizationUrl.set("https://developer.factset.com")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java.git")
+                    developerConnection.set("scm:git:ssh://factset/enterprise-sdk-eventdriven-factsettrading-java.git")
+                    url.set("https://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java/")
+                }
+
+            }
+
+
+
         }
+    }
+
+    repositories {
+        maven {
+            var releasesRepoUrlString= System.getenv("MAVEN_RELEASES_URL")
+            var snapshotsRepoUrlString = System.getenv("MAVEN_SNAPSHOTS_URL")
+            var username = System.getenv("MAVEN_USERNAME")
+            var password = System.getenv("MAVEN_PASSWORD")
+
+            if (releasesRepoUrlString == null) {
+                releasesRepoUrlString = ""
+                project.logger.error("MAVEN_RELEASES_URL not set")
+            }
+
+            if (snapshotsRepoUrlString == null) {
+                snapshotsRepoUrlString = ""
+                project.logger.error("MAVEN_SNAPSHOTS_URL not set")
+            }
+
+            if (username == null) {
+                username = ""
+                project.logger.error("MAVEN_USERNAME not set")
+            }
+
+            if (password == null) {
+                password = ""
+                project.logger.error("MAVEN_PASSWORD not set")
+            }
+
+            val releasesRepoUrl = uri(releasesRepoUrlString)
+            val snapshotsRepoUrl = uri(snapshotsRepoUrlString)
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+
+    signing {
+        sign(publications["mavenJava"])
     }
 }
