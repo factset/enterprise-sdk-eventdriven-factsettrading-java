@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "0.1"
+version = "1.0.0"
 
 java {
     withJavadocJar()
@@ -87,11 +87,7 @@ publishing {
                     developerConnection.set("scm:git:ssh://factset/enterprise-sdk-eventdriven-factsettrading-java.git")
                     url.set("https://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java/")
                 }
-
             }
-
-
-
         }
     }
 
