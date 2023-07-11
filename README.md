@@ -1,12 +1,12 @@
 <img alt="FactSet" src="https://www.factset.com/hubfs/Assets/images/factset-logo.svg" height="56" width="290">
 
-# FactSet Trading streaming client library for Java
+# FactSet Trading event-driven client library for Java
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.factset.sdk.streaming/factsettrading)](https://search.maven.org/artifact/com.factset.streaming/factsettrading)
+[![Maven Central](https://img.shields.io/maven-central/v/com.factset.sdk.eventdriven/factsettrading)](https://search.maven.org/artifact/com.factset.eventdriven/factsettrading)
 
 [![Apache-2 license](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-This repository contains a streaming api client for the FactSet Trading API
+This repository contains an event-driven api client for the FactSet Trading API
 
 ## Requirements
 
@@ -21,7 +21,7 @@ Add the below dependency to the project's POM:
 ```xml
 
 <dependency>
-    <groupId>com.factset.sdk.streaming</groupId>
+    <groupId>com.factset.sdk.eventdriven</groupId>
     <artifactId>factsettrading</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.factset.sdk.streaming:factsettrading:1.0.0"
+    implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
 }
 ```
 
@@ -53,9 +53,9 @@ dependencies {
 ```java
 package com.factset.sdk.console;
 
-import com.factset.sdk.streaming.client.Subscription;
-import com.factset.sdk.streaming.client.WebsocketApiClient;
-import com.factset.sdk.streaming.factsettrading.OrderUpdateApi;
+import com.factset.sdk.eventdriven.client.Subscription;
+import com.factset.sdk.eventdriven.client.WebsocketApiClient;
+import com.factset.sdk.eventdriven.factsettrading.OrderUpdateApi;
 import com.factset.sdk.utils.authentication.ConfidentialClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

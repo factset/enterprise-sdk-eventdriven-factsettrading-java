@@ -9,8 +9,8 @@ jobs:
     name: Deploy to package index
     runs-on: ubuntu-20.04
     env:
-      MAVEN_SNAPSHOTS_URL: ${{ secrets.OSSRH_SNAPSHOT_URL }}
-      MAVEN_RELEASES_URL: ${{ secrets.OSSRH_RELEASE_URL }}
+      MAVEN_SNAPSHOTS_URL: ${{ vars.OSSRH_SNAPSHOT_URL }}
+      MAVEN_RELEASES_URL: ${{ vars.OSSRH_RELEASE_URL }}
       MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 
