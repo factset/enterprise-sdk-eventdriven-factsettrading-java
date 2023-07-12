@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 java {
     withJavadocJar()
@@ -93,38 +93,38 @@ publishing {
 
     repositories {
         maven {
-            var releasesRepoUrlString= System.getenv("MAVEN_RELEASES_URL")
-            var snapshotsRepoUrlString = System.getenv("MAVEN_SNAPSHOTS_URL")
-            var username = System.getenv("MAVEN_USERNAME")
-            var password = System.getenv("MAVEN_PASSWORD")
+            var releasesRepoUrlEnv = System.getenv("MAVEN_RELEASES_URL")
+            var snapshotsRepoUrlEnv = System.getenv("MAVEN_SNAPSHOTS_URL")
+            var usernameEnv = System.getenv("MAVEN_USERNAME")
+            var passwordEnv = System.getenv("MAVEN_PASSWORD")
 
-            if (releasesRepoUrlString == null) {
-                releasesRepoUrlString = ""
+            if (releasesRepoUrlEnv == null) {
+                releasesRepoUrlEnv = ""
                 project.logger.error("MAVEN_RELEASES_URL not set")
             }
 
-            if (snapshotsRepoUrlString == null) {
-                snapshotsRepoUrlString = ""
+            if (snapshotsRepoUrlEnv == null) {
+                snapshotsRepoUrlEnv = ""
                 project.logger.error("MAVEN_SNAPSHOTS_URL not set")
             }
 
-            if (username == null) {
-                username = ""
+            if (usernameEnv == null) {
+                usernameEnv = ""
                 project.logger.error("MAVEN_USERNAME not set")
             }
 
-            if (password == null) {
-                password = ""
+            if (passwordEnv == null) {
+                passwordEnv = ""
                 project.logger.error("MAVEN_PASSWORD not set")
             }
 
-            val releasesRepoUrl = uri(releasesRepoUrlString)
-            val snapshotsRepoUrl = uri(snapshotsRepoUrlString)
+            val releasesRepoUrl = uri(releasesRepoUrlEnv)
+            val snapshotsRepoUrl = uri(snapshotsRepoUrlEnv)
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
             credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+                username = usernameEnv
+                password = passwordEnv
             }
 
             authentication {
