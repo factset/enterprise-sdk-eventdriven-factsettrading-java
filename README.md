@@ -125,10 +125,6 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 ./gradlew publisToMavenLocal
 ```
 
-## Troubleshooting
-
-... TODO ...
-
 ## Copyright
 
 Copyright 2023 FactSet Research Systems Inc
