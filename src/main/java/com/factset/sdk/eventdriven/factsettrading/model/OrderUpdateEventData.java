@@ -7,7 +7,7 @@ public class OrderUpdateEventData {
     String ordStatus;
     String symbol;
     String side;
-    String SenderSubID;
+    String senderSubID;
     Double cumQty;
     String sendTime;
     String messageType;

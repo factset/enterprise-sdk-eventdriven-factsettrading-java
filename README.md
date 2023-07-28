@@ -70,7 +70,7 @@ public class Console {
         // initialize the websocket client
         WebsocketApiClient client = new WebsocketApiClient(
                 WebsocketApiClient.Options.builder()
-                        .url("https://api.factset.com/streaming/trading/ems/v1")
+                        .url("https://api.factset.com/streaming/trading/ems/v0")
                         .authorizer(confidentialClient)
                         .build()
         ).connectAsync().join();
