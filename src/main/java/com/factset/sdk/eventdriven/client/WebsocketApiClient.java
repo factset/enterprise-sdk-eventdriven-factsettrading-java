@@ -91,7 +91,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
     private volatile boolean connectionIsAlive = true;
 
-    private final CompletableFuture<Void> disconnectFuture;
+    private final CompletableFuture<DisconnectException> disconnectFuture;
 
     public WebsocketApiClient(Options options) {
         this(options, new OkHttpClient());
@@ -190,8 +190,6 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
             @SuppressWarnings("NullableProblems")
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 cleanupResources(code, reason, null);
-                disconnectFuture.complete(null);
-
                 logger.info("websocket closed: code={} reason={}", code, reason);
             }
 
@@ -230,7 +228,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         timeoutScheduler.shutdownNow();
 
-        disconnectFuture.complete(null);
+        disconnectFuture.complete(disconnectException);
     }
 
     private void handleMessage(String message) {
@@ -361,7 +359,15 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         websocket.close(code, reason);
         websocket = null;
 
-        return disconnectFuture;
+        // turn the Future<DisconnectException> into a Future<Void>
+        return disconnectFuture.thenAccept(d -> {});
+    }
+
+    @Override
+    public CompletableFuture<DisconnectException> onDisconnect() {
+        // return a new future instead of the original one
+        // to avoid someone from the outside completing it.
+        return disconnectFuture.whenComplete((d, t) -> {});
     }
 
     @Override

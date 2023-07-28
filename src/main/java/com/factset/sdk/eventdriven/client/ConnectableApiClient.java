@@ -2,6 +2,7 @@ package com.factset.sdk.eventdriven.client;
 
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public interface ConnectableApiClient {
     CompletableFuture<? extends EventDrivenApiClient> connectAsync();
@@ -13,4 +14,10 @@ public interface ConnectableApiClient {
      * @return CompletableFuture
      */
     CompletableFuture<Void> disconnectAsync();
+
+    /**
+     * Returns a future that completes normally when the client disconnects.
+     * A DisconnectException with additional information about the disconnect is provided.
+     */
+    CompletableFuture<DisconnectException> onDisconnect();
 }
