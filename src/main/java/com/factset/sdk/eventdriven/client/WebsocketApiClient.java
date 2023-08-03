@@ -158,6 +158,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         return new Request.Builder()
                 .url(options.url)
                 .header("Authorization", "Bearer " + accessToken)
+                .header("Sec-WebSocket-Protocol", "v1.json.factset.com")
                 .build();
     }
 
