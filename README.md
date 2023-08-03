@@ -77,6 +77,8 @@ repositories {
 }
 ```
 
+Snapshot releases are cached by gradle for some time, for details see: [Gradle Dynamic Versions](https://docs.gradle.org/current/userguide/dynamic_versions.html#sub:declaring_dependency_with_changing_version)
+
 ## Usage
 
 1. [Generate OAuth 2.0 authentication credentials](https://developer.factset.com/learn/authentication-oauth2).
