@@ -41,6 +41,42 @@ dependencies {
 }
 ```
 
+### Snapshot Releases
+
+To be able to install snapshot releases of the sdk an additional repository must be added to the maven or gradle config.
+
+#### Maven Snapshot Repository
+
+```xml
+<repositories>
+    <repository>
+        <id>sonatype</id>
+        <name>sonatype-snapshot</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+    </repository>
+</repositories>
+```
+
+#### Gradle Snapshot Repository
+
+```groovy
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
+}
+```
+
 ## Usage
 
 1. [Generate OAuth 2.0 authentication credentials](https://developer.factset.com/learn/authentication-oauth2).
@@ -113,7 +149,7 @@ which requires a [binding](https://www.slf4j.org/manual.html#swapping) to your l
 If no binding is found, SLF4J prints out the following warning and then defaults to a no-operation
 implementation, which discard all logs:
 
-```
+```text
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
@@ -121,7 +157,7 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 
 ## Installation into local maven repo
 
-```
+```sh
 ./gradlew publisToMavenLocal
 ```
 
@@ -140,7 +176,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-
-
-
