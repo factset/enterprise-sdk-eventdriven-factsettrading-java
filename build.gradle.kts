@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 java {
     withJavadocJar()
@@ -28,7 +28,7 @@ dependencies {
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.7")
 
     testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation(platform("org.junit:junit-bom:5.9.3"))
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
 
     compileOnly("org.projectlombok:lombok:1.18.28")
