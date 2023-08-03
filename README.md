@@ -2,7 +2,7 @@
 
 # FactSet Trading event-driven client library for Java
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.factset.sdk.eventdriven/factsettrading)](https://search.maven.org/artifact/com.factset.eventdriven/factsettrading)
+[![Maven Central](https://img.shields.io/maven-central/v/com.factset.sdk.eventdriven/factsettrading)](https://search.maven.org/artifact/com.factset.sdk.eventdriven/factsettrading)
 
 [![Apache-2 license](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
