@@ -46,6 +46,17 @@ tasks.compileJava {
     targetCompatibility = "1.8"
 }
 
+tasks.jar {
+    manifest {
+        attributes(
+            mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version
+            )
+        )
+    }
+}
+
 // https://docs.gradle.org/current/userguide/publishing_maven.html
 publishing {
     publications {

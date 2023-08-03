@@ -122,6 +122,7 @@ public class WebsocketApiClientTest {
         Request expectedWSRequest = new Request.Builder()
                 .url(wsUrl)
                 .header("Authorization", "Bearer " + oauthToken)
+                .header("User-Agent", "fds-sdk/java/eventdriven/null/null")
                 .header("Sec-WebSocket-Protocol", "v1.json.factset.com")
                 .build();
 
