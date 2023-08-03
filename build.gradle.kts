@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 java {
     withJavadocJar()
@@ -44,6 +44,17 @@ tasks.test {
 tasks.compileJava {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            mapOf(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version
+            )
+        )
+    }
 }
 
 // https://docs.gradle.org/current/userguide/publishing_maven.html

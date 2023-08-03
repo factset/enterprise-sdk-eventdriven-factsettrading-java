@@ -26,6 +26,9 @@ import static com.factset.sdk.eventdriven.client.ExtractedMeta.extractMeta;
 public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiClient {
 
     private final static Logger logger = LoggerFactory.getLogger(WebsocketApiClient.class);
+    private final static String implementationVersion = WebsocketApiClient.class.getPackage().getImplementationVersion();
+    private final static String implementationTitle = WebsocketApiClient.class.getPackage().getImplementationTitle();
+    private final static String userAgent = "fds-sdk/java/eventdriven/" + implementationTitle + "/" + implementationVersion;
 
     @Value
     @Builder
@@ -158,6 +161,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         return new Request.Builder()
                 .url(options.url)
                 .header("Authorization", "Bearer " + accessToken)
+                .header("User-Agent", userAgent)
                 .build();
     }
 
