@@ -122,6 +122,7 @@ public class WebsocketApiClientTest {
         Request expectedWSRequest = new Request.Builder()
                 .url(wsUrl)
                 .header("Authorization", "Bearer " + oauthToken)
+                .header("Sec-WebSocket-Protocol", "v1.json.factset.com")
                 .build();
 
         // unfortunately okhttp's Request doesn't implement equals,
