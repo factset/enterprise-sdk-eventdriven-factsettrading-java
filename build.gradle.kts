@@ -25,7 +25,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     implementation("org.slf4j:slf4j-api:2.0.7")
-    testRuntimeOnly("org.slf4j:slf4j-simple:2.0.7")
+    testRuntimeOnly("org.slf4j:slf4j-simple:2.0.9")
 
     testImplementation("org.mockito:mockito-inline:4.11.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
