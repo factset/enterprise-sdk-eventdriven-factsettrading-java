@@ -59,9 +59,8 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         Duration defaultResponseTimeout = Duration.ofSeconds(5);
     }
 
-    @Value
-    private static class SubscriptionListener {
-        BiConsumer<IncomingMessage, Throwable> handler;
+    @FunctionalInterface
+    private interface MessageListener extends BiConsumer<IncomingMessage, Throwable> {
     }
 
     @Data
@@ -82,7 +81,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
     private final EventIdGenerator eventIdGenerator = new EventIdGenerator();
 
-    private final Map<Integer, SubscriptionListener> subscriptionListeners = new ConcurrentHashMap<>();
+    private final Map<Integer, MessageListener> messageListeners = new ConcurrentHashMap<>();
 
     private WebSocket websocket;
 
@@ -218,11 +217,11 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
             disconnectException = new DisconnectException(code, reason);
         }
 
-        subscriptionListeners.values().forEach(subscriptionListener -> {
-            subscriptionListener.handler.accept(null, disconnectException);
+        messageListeners.values().forEach(messageListener -> {
+            messageListener.accept(null, disconnectException);
         });
 
-        subscriptionListeners.clear();
+        messageListeners.clear();
 
         timeoutScheduler.shutdownNow();
 
@@ -238,7 +237,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
             Meta meta = Objects.requireNonNull(msg.meta, "Meta must not be null.");
 
-            if (handleSubscriptionEvent(msg)) {
+            if (handleApiMessage(msg)) {
                 return;
             }
 
@@ -274,34 +273,33 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         return true;
     }
 
-    private boolean handleSubscriptionEvent(IncomingMessage message) {
-        SubscriptionListener listener = subscriptionListeners.get(message.meta.id);
+    private boolean handleApiMessage(IncomingMessage message) {
+        MessageListener listener = messageListeners.get(message.meta.id);
         if (listener == null) {
             return false;
         }
 
         if ("ErrorResponse".equals(message.meta.type)) {
-            handleSubscriptionEventError(message.meta.id, listener, message.json);
+            handleErrorResponse(message, listener);
         } else {
-            listener.handler.accept(message, null);
+            listener.accept(message, null);
         }
 
         return true;
     }
 
-    private void handleSubscriptionEventError(int id, SubscriptionListener listener, String message) {
-        logger.debug("Got an ErrorResponse for subscription with id: {}", id);
+    private void handleErrorResponse(IncomingMessage message, MessageListener listener) {
+        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
 
         try {
-            ErrorResponse errorResponse = json.readValue(message, ErrorResponse.class);
-            listener.handler.accept(null, new ErrorResponseException(errorResponse.getErrors()));
+            ErrorResponse errorResponse = json.readValue(message.json, ErrorResponse.class);
+            listener.accept(null, new ErrorResponseException(errorResponse.getErrors()));
         } catch (JsonProcessingException e) {
-            listener.handler.accept(null, new MalformedMessageException(e));
+            listener.accept(null, new MalformedMessageException(e));
         }
 
-        logger.debug("Remove subscription listener for id: {}", id);
-        subscriptionListeners.remove(id);
-
+        logger.debug("Remove subscription listener for id: {}", message.meta.id);
+        messageListeners.remove(message.meta.id);
     }
 
     @Override
@@ -333,14 +331,14 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         CompletableFuture<IncomingMessage> future = timeoutFuture(id, timeout);
 
-        subscriptionListeners.put(id, new SubscriptionListener(
+        messageListeners.put(id,
                 (msg, err) -> {
                     if (msg != null) {
                         future.complete(msg);
                     } else {
                         future.completeExceptionally(err);
                     }
-                })
+                }
         );
 
         try {
@@ -350,7 +348,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         }
 
         return future
-                .whenComplete((msg, err) -> subscriptionListeners.remove(id))
+                .whenComplete((msg, err) -> messageListeners.remove(id))
                 .thenApply(parseMessage(responseType));
     }
 
@@ -368,7 +366,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         do {
             nextId = eventIdGenerator.getNextEventId();
-        } while (subscriptionListeners.containsKey(nextId));
+        } while (messageListeners.containsKey(nextId));
 
         return nextId;
     }
@@ -409,7 +407,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     public <TRequest, TResponse> CompletableFuture<Subscription> subscribe(TRequest request, Class<TResponse> responseType, BiConsumer<TResponse, Throwable> callback) {
         String responseTypeName = responseType.getSimpleName();
 
-        BiConsumer<IncomingMessage, Throwable> listener = (msg, t) -> {
+        MessageListener listener = (msg, t) -> {
             if (t != null) {
                 callback.accept(null, t);
                 return;
@@ -431,7 +429,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         return request(request, AckResponse.class).thenApply(ackResponse -> {
             int id = ackResponse.meta.id;
-            subscriptionListeners.put(id, new SubscriptionListener(listener));
+            messageListeners.put(id, listener);
             return () -> cancelSubscription(id);
         });
     }
@@ -441,7 +439,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         // send the unsubscribe request
         return request(new UnsubscribeRequest(id), AckResponse.class).thenAccept(ackResponse -> {
-            subscriptionListeners.remove(id);
+            messageListeners.remove(id);
         });
     }
 
