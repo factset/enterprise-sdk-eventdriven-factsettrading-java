@@ -31,7 +31,7 @@ public interface EventDrivenApiClient {
      *
      * @throws InvalidRequestException if the request object isn't well-formed (e.g. follows the standard)
      */
-    <TRequest, TResponse> CompletableFuture<Subscription> subscribe(TRequest request, Class<TResponse> responseType, BiConsumer<TResponse, Throwable> callback);
+    <TRequest, TResponse> CompletableFuture<Subscription> subscribe(TRequest request, BiConsumer<WebsocketApiClient.IncomingMessage, Throwable> callback);
 
 }
 

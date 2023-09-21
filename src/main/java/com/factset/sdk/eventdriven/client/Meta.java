@@ -3,7 +3,7 @@ package com.factset.sdk.eventdriven.client;
 import lombok.Data;
 
 @Data
-class Meta {
+public class Meta {
     int id;
     String type;
     long timeout;

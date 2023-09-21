@@ -64,11 +64,19 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     @Data
-    private static class IncomingMessage {
+    public static class IncomingMessage {
         Meta meta;
 
         @JsonIgnore
         String json;
+
+        @JsonIgnore
+        ObjectMapper jsonParser;
+
+        public <T> T parseAs(Class<T> messageType) throws JsonProcessingException {
+            return jsonParser.readValue(json, messageType);
+        }
+
     }
 
     private final ObjectMapper json = new ObjectMapper()
@@ -234,6 +242,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         try {
             IncomingMessage msg = json.readValue(message, IncomingMessage.class);
             msg.json = message;
+            msg.jsonParser = json;
 
             Meta meta = Objects.requireNonNull(msg.meta, "Meta must not be null.");
 
@@ -281,22 +290,22 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         if ("ErrorResponse".equals(message.meta.type)) {
             handleErrorResponse(message, listener);
-        } else {
-            listener.accept(message, null);
         }
+            listener.accept(message, null);
+//        }
 
         return true;
     }
 
     private void handleErrorResponse(IncomingMessage message, MessageListener listener) {
-        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
-
-        try {
-            ErrorResponse errorResponse = json.readValue(message.json, ErrorResponse.class);
-            listener.accept(null, new ErrorResponseException(errorResponse.getErrors()));
-        } catch (JsonProcessingException e) {
-            listener.accept(null, new MalformedMessageException(e));
-        }
+//        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
+//
+//        try {
+//            ErrorResponse errorResponse = json.readValue(message.json, ErrorResponse.class);
+//            listener.accept(null, new ErrorResponseException(errorResponse.getErrors()));
+//        } catch (JsonProcessingException e) {
+//            listener.accept(null, new MalformedMessageException(e));
+//        }
 
         logger.debug("Remove subscription listener for id: {}", message.meta.id);
         messageListeners.remove(message.meta.id);
@@ -404,24 +413,15 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     @Override
-    public <TRequest, TResponse> CompletableFuture<Subscription> subscribe(TRequest request, Class<TResponse> responseType, BiConsumer<TResponse, Throwable> callback) {
-        String responseTypeName = responseType.getSimpleName();
-
+    public <TRequest, TResponse> CompletableFuture<Subscription> subscribe(TRequest request,  BiConsumer<IncomingMessage, Throwable> callback) {
         MessageListener listener = (msg, t) -> {
             if (t != null) {
                 callback.accept(null, t);
                 return;
             }
 
-            if (!responseTypeName.equals(msg.meta.type)) {
-                callback.accept(null, newUnexpectedMessageException(responseTypeName, msg));
-                return;
-            }
-
             try {
-                callback.accept(json.readValue(msg.json, responseType), null);
-            } catch (JsonProcessingException e) {
-                callback.accept(null, new MalformedMessageException(e));
+                callback.accept(msg, null);
             } catch (Exception e) {
                 logger.warn("Exception while calling subscription callback", e);
             }
