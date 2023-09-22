@@ -1,8 +1,8 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
 import lombok.Data;
 
 @Data
-class AckResponse {
+public class AckResponse {
     Meta meta = Meta.forClass(AckResponse.class);
 }

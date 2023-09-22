@@ -1,5 +1,7 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
+import com.factset.sdk.eventdriven.client.Error;
+import com.factset.sdk.eventdriven.client.model.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

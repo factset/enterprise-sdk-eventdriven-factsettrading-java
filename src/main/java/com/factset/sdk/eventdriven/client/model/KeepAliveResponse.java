@@ -1,9 +1,9 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
 import java.time.Instant;
 
 @lombok.Data
-class KeepAliveResponse {
+public class KeepAliveResponse {
     Meta meta = Meta.forClass(KeepAliveResponse.class);
     Data data = new Data();
 

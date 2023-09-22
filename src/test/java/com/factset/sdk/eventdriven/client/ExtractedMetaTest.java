@@ -1,5 +1,6 @@
 package com.factset.sdk.eventdriven.client;
 
+import com.factset.sdk.eventdriven.client.model.ConfigurationRequest;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,6 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
+import com.factset.sdk.eventdriven.client.Error;
 import lombok.Data;
 
 import java.util.List;

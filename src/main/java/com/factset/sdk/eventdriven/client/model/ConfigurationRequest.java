@@ -1,7 +1,7 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
 @lombok.Data
-class ConfigurationRequest {
+public class ConfigurationRequest {
     Meta meta = Meta.forClass(ConfigurationRequest.class);
     Data data = new Data();
 

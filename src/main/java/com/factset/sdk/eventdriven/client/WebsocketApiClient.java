@@ -1,5 +1,6 @@
 package com.factset.sdk.eventdriven.client;
 
+import com.factset.sdk.eventdriven.client.model.*;
 import com.factset.sdk.utils.authentication.OAuth2Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -131,11 +132,11 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
     private CompletableFuture<Void> configureConnection() {
         ConfigurationRequest request = new ConfigurationRequest();
-        request.data.maximumIdleInterval = options.maximumIdleInterval.toMillis();
+        request.getData().setMaximumIdleInterval(options.maximumIdleInterval.toMillis());
 
         return request(request, ConfigurationResponse.class)
                 .thenAccept(response -> {
-                    long maximumIdleInterval = Math.min(request.data.maximumIdleInterval, response.getData().getMaximumIdleInterval());
+                    long maximumIdleInterval = Math.min(request.getData().getMaximumIdleInterval(), response.getData().getMaximumIdleInterval());
                     setupKeepAliveScheduler(maximumIdleInterval);
                 });
     }
@@ -254,7 +255,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
                 return;
             }
 
-            logger.debug("Received Unhandled Message: {}", meta.type);
+            logger.debug("Received Unhandled Message: {}", meta.getType());
 
         } catch (JsonProcessingException | NullPointerException e) {
             logger.error("Could not parse incoming message: {} message={}", e, message);
@@ -262,7 +263,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleSystemMessages(IncomingMessage message) throws JsonProcessingException {
-        switch (message.meta.type) {
+        switch (message.meta.getType()) {
             case "KeepAliveRequest":
                 return handleKeepAliveRequest(message.json);
             default:
@@ -274,7 +275,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         logger.debug("Handle KeepAliveRequest");
 
         KeepAliveRequest keepAliveRequest = json.readValue(message, KeepAliveRequest.class);
-        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.meta.getId());
+        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.getMeta().getId());
         send(keepAliveResponse);
 
         connectionIsAlive = true;
@@ -283,12 +284,12 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleApiMessage(IncomingMessage message) {
-        MessageListener listener = messageListeners.get(message.meta.id);
+        MessageListener listener = messageListeners.get(message.meta.getId());
         if (listener == null) {
             return false;
         }
 
-        if ("ErrorResponse".equals(message.meta.type)) {
+        if ("ErrorResponse".equals(message.meta.getType())) {
             handleErrorResponse(message, listener);
         }
             listener.accept(message, null);
@@ -307,8 +308,8 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 //            listener.accept(null, new MalformedMessageException(e));
 //        }
 
-        logger.debug("Remove subscription listener for id: {}", message.meta.id);
-        messageListeners.remove(message.meta.id);
+        logger.debug("Remove subscription listener for id: {}", message.meta.getId());
+        messageListeners.remove(message.meta.getId());
     }
 
     @Override
@@ -365,7 +366,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         String errorMessage = String.format(
                 "Unexpected message received. Expected: %s. Received: %s",
                 expectedType,
-                received.meta.type
+                received.meta.getType()
         );
         return new UnexpectedMessageException(errorMessage);
     }
@@ -400,7 +401,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     private <TResponse> Function<IncomingMessage, TResponse> parseMessage(Class<TResponse> responseType) {
         String expectedType = responseType.getSimpleName();
         return text -> {
-            if (!expectedType.equals(text.meta.type)) {
+            if (!expectedType.equals(text.meta.getType())) {
                 throw newUnexpectedMessageException(expectedType, text);
             }
 
@@ -428,7 +429,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         };
 
         return request(request, AckResponse.class).thenApply(ackResponse -> {
-            int id = ackResponse.meta.id;
+            int id = ackResponse.getMeta().getId();
             messageListeners.put(id, listener);
             return () -> cancelSubscription(id);
         });

@@ -1,7 +1,7 @@
-package com.factset.sdk.eventdriven.client;
+package com.factset.sdk.eventdriven.client.model;
 
 @lombok.Data
-class KeepAliveRequest {
+public class KeepAliveRequest {
     Meta meta = Meta.forClass(KeepAliveRequest.class);
     Data data = new Data();
 

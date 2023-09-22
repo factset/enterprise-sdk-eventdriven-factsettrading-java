@@ -1,6 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading;
 
-import com.factset.sdk.eventdriven.client.ErrorResponse;
+import com.factset.sdk.eventdriven.client.model.ErrorResponse;
 import com.factset.sdk.eventdriven.client.Subscription;
 import com.factset.sdk.eventdriven.client.UnexpectedMessageException;
 import com.factset.sdk.eventdriven.client.WebsocketApiClient;
