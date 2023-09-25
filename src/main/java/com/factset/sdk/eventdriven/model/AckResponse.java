@@ -1,4 +1,4 @@
-package com.factset.sdk.eventdriven.client.model;
+package com.factset.sdk.eventdriven.model;
 
 import lombok.Data;
 

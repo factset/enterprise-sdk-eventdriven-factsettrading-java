@@ -22,7 +22,6 @@ public interface EventDrivenApiClient {
      * Sends the request and prepares to receive subscription events of the given type.
      *
      * @param request request to be made
-     * @param responseType type of the response
      * @param callback function to be called with the response
      * @return A future of a {@link Subscription}. Completes successfully once the server acknowledges the subscription
      *         request. It completes exceptionally in any other case.

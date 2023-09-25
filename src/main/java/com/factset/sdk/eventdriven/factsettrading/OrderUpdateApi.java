@@ -1,12 +1,12 @@
 package com.factset.sdk.eventdriven.factsettrading;
 
-import com.factset.sdk.eventdriven.client.model.ErrorResponse;
+import com.factset.sdk.eventdriven.model.ErrorResponse;
 import com.factset.sdk.eventdriven.client.Subscription;
 import com.factset.sdk.eventdriven.client.UnexpectedMessageException;
 import com.factset.sdk.eventdriven.client.WebsocketApiClient;
-import com.factset.sdk.eventdriven.factsettrading.model.Meta;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
+import com.factset.sdk.eventdriven.model.Meta;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

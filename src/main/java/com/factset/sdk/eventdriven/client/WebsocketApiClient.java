@@ -1,6 +1,6 @@
 package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.client.model.*;
+import com.factset.sdk.eventdriven.model.*;
 import com.factset.sdk.utils.authentication.OAuth2Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
