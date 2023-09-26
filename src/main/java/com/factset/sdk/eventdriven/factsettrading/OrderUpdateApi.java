@@ -1,9 +1,7 @@
 package com.factset.sdk.eventdriven.factsettrading;
 
+import com.factset.sdk.eventdriven.client.*;
 import com.factset.sdk.eventdriven.model.ErrorResponse;
-import com.factset.sdk.eventdriven.client.Subscription;
-import com.factset.sdk.eventdriven.client.UnexpectedMessageException;
-import com.factset.sdk.eventdriven.client.WebsocketApiClient;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
 import com.factset.sdk.eventdriven.model.Meta;
@@ -81,12 +79,12 @@ public class OrderUpdateApi {
             });
         }
 
-        private <T> boolean messageHandler(WebsocketApiClient.IncomingMessage msg, Class<T> messageClass, Consumer<T> handler) {
-            if (messageClass.getSimpleName().equals(msg.getMeta().getType())) {
+        private <T> boolean messageHandler(Message msg, Class<T> messageClass, Consumer<T> handler) {
+            if (messageClass.getSimpleName().equals(msg.getType())) {
                 if (handler != null) {
                     try {
                         handler.accept(msg.parseAs(messageClass));
-                    } catch (JsonProcessingException ex) {
+                    } catch (MalformedMessageException ex) {
                         onError.accept(ex);
                     }
                 } else {

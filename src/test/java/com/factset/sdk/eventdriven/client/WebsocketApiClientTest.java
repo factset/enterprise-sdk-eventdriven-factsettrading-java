@@ -183,11 +183,11 @@ public class WebsocketApiClientTest {
             return null;
         });
 
-        ConfigurationResponse response = client.connectAsync().thenCompose(c ->
-                c.request(request, ConfigurationResponse.class)
+        Message message = client.connectAsync().thenCompose(c ->
+                c.request(request)
         ).join();
 
-        Assertions.assertEquals(expectedResponse, response);
+        Assertions.assertEquals(expectedResponse, message.parseAs(ConfigurationResponse.class));
     }
 
     @Test
@@ -209,8 +209,8 @@ public class WebsocketApiClientTest {
         });
 
         try {
-            client.connectAsync().thenCompose(c ->
-                    c.request(request, ConfigurationResponse.class)
+            Message join = client.connectAsync().thenCompose(c ->
+                    c.request(request)
             ).join();
 
             fail("should not complete normally");
@@ -231,7 +231,7 @@ public class WebsocketApiClientTest {
             client.connectAsync().thenCompose(c ->
                     // the actual response class does not matter here, as we should
                     // get the timeout after a while
-                    c.request(request, ConfigurationResponse.class)
+                    c.request(request)
             ).get();
 
             fail("should not complete normally");
@@ -269,7 +269,7 @@ public class WebsocketApiClientTest {
 
         client.connectAsync().join();
 
-        List<WebsocketApiClient.IncomingMessage> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
@@ -328,7 +328,7 @@ public class WebsocketApiClientTest {
 
         client.connectAsync().join();
 
-        List<WebsocketApiClient.IncomingMessage> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
@@ -372,7 +372,7 @@ public class WebsocketApiClientTest {
 
         client.connectAsync().join();
 
-        List<WebsocketApiClient.IncomingMessage> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
