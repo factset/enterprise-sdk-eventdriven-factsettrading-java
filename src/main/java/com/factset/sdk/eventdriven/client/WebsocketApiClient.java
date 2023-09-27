@@ -340,7 +340,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     @Override
-    public <TRequest> CompletableFuture<Message> request(TRequest request) {
+    public CompletableFuture<Message> request(Object request) {
         ExtractedMeta meta = extractMeta(request);
 
         int id = getNextEventId();
@@ -402,7 +402,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     @Override
-    public <TRequest> CompletableFuture<Subscription> subscribe(TRequest request, BiConsumer<Message, Throwable> callback) {
+    public CompletableFuture<Subscription> subscribe(Object request, BiConsumer<Message, Throwable> callback) {
         MessageListener listener = (msg, t) -> {
             if (t != null) {
                 callback.accept(null, t);

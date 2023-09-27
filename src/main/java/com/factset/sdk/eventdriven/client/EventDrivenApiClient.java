@@ -10,24 +10,38 @@ public interface EventDrivenApiClient {
      *
      * @param request request to be made
      * @return CompletableFuture
-     * @param <TRequest> type of the request
-     *
      * @throws InvalidRequestException if the request object isn't well-formed (e.g. follows the standard)
      */
-    <TRequest> CompletableFuture<Message> request(TRequest request);
+    CompletableFuture<Message> request(Object request);
+
+    default <T> CompletableFuture<T> request(Object request, Class<T> expectedMessage) {
+        return request(request).thenApply(message -> message.parseAs(expectedMessage));
+    }
 
     /**
      * Sends the request and prepares to receive subscription events of the given type.
      *
-     * @param request request to be made
+     * @param request  request to be made
      * @param callback function to be called with the response
      * @return A future of a {@link Subscription}. Completes successfully once the server acknowledges the subscription
-     *         request. It completes exceptionally in any other case.
-     * @param <TRequest> type of the request
-     *
-     * @throws InvalidRequestException if the request object isn't well-formed (e.g. follows the standard)
+     * request. It completes exceptionally in any other case.
+     * @throws InvalidRequestException if the request object isn't well-formed (e.g. doesn't follow the standard)
      */
-    <TRequest> CompletableFuture<Subscription> subscribe(TRequest request, BiConsumer<Message, Throwable> callback);
+    CompletableFuture<Subscription> subscribe(Object request, BiConsumer<Message, Throwable> callback);
+
+    default <T> CompletableFuture<Subscription> subscribe(Object request, Class<T> expectedMessage, BiConsumer<T, Throwable> callback) {
+        return subscribe(request, (msg, t) -> {
+            if (msg != null) {
+                try {
+                    callback.accept(msg.parseAs(expectedMessage), null);
+                } catch (Throwable ex) {
+                    callback.accept(null, ex);
+                }
+            } else {
+                callback.accept(null, t);
+            }
+        });
+    }
 
 }
 
