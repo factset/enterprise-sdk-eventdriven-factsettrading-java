@@ -74,7 +74,11 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         @JsonIgnore
         private ObjectMapper jsonParser;
 
-        public <T> T parseAs(Class<T> messageType) {
+        public <T> T parseAs(Class<T> messageType) throws MalformedMessageException, UnexpectedMessageException {
+            if (!messageType.getSimpleName().equals(meta.getType())) {
+                throw new UnexpectedMessageException(messageType.getSimpleName(), this);
+            }
+
             try {
                 return jsonParser.readValue(json, messageType);
             } catch (JsonProcessingException e) {
@@ -376,7 +380,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
                 expectedType,
                 received.meta.getType()
         );
-        return new UnexpectedMessageException(errorMessage);
+        return new UnexpectedMessageException(errorMessage, received);
     }
 
     private int getNextEventId() {

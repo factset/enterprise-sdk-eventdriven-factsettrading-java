@@ -69,7 +69,7 @@ public class OrderUpdateApi {
 
                 if (messageHandler(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
                 if (messageHandler(msg, Meta.class, onMeta)) return;
-                onError.accept(new UnexpectedMessageException("..."));
+                onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
             });
         }
 
