@@ -1,11 +1,9 @@
 package com.factset.sdk.eventdriven.factsettrading;
 
 import com.factset.sdk.eventdriven.client.*;
-import com.factset.sdk.eventdriven.model.ErrorResponse;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
 import com.factset.sdk.eventdriven.model.Meta;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,9 +33,8 @@ public class OrderUpdateApi {
         private final OrderSubscriptionRequest request;
 
         private Consumer<OrderUpdateEvent> onOrderUpdateEvent;
-
         private Consumer<Meta> onMeta;
-        private Consumer<Throwable> onError;
+        private Consumer<Throwable> onError = t -> logger.warn("Exception in subscription", t);
 
         public OrderUpdateSubscription(OrderSubscriptionRequest request) {
             this.request = request;
@@ -65,15 +62,14 @@ public class OrderUpdateApi {
                     return;
                 }
 
-                if (messageHandler(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
-                if (messageHandler(msg, Meta.class, onMeta)) return;
-                if (onError != null) {
-                    onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
-                }
+                if (handleMessage(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
+                if (handleMessage(msg, Meta.class, onMeta)) return;
+
+                onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
             });
         }
 
-        private <T> boolean messageHandler(Message msg, Class<T> messageClass, Consumer<T> handler) {
+        private <T> boolean handleMessage(Message msg, Class<T> messageClass, Consumer<T> handler) {
             if (messageClass.getSimpleName().equals(msg.getType())) {
                 if (handler != null) {
                     try {
@@ -82,7 +78,7 @@ public class OrderUpdateApi {
                         onError.accept(ex);
                     }
                 } else {
-                    logger.warn("kein message handler error: on{}", messageClass.getSimpleName());
+                    logger.warn("Missing handler: on{}", messageClass.getSimpleName());
                 }
                 return true;
             }
