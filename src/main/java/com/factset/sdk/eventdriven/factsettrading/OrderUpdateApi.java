@@ -60,11 +60,6 @@ public class OrderUpdateApi {
             return this;
         }
 
-        public OrderUpdateSubscription onErrorResponse(Consumer<ErrorResponse> onErrorResponse) {
-            this.onErrorResponse = onErrorResponse;
-            return this;
-        }
-
         public CompletableFuture<Subscription> subscribe() {
             return client.subscribe(request, (msg, t) -> {
                 if (t != null) {
@@ -74,7 +69,6 @@ public class OrderUpdateApi {
 
                 if (messageHandler(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
                 if (messageHandler(msg, Meta.class, onMeta)) return;
-                if (messageHandler(msg, ErrorResponse.class, onErrorResponse)) return;
                 onError.accept(new UnexpectedMessageException("..."));
             });
         }

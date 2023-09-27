@@ -284,14 +284,17 @@ public class WebsocketApiClientTest {
         Thread.sleep(100);
 
         assertNull(exception.get());
-        assertEquals(
-                Arrays.asList(
-                        ExampleSubscriptionEvent.create(eventId.get(), 1),
-                        ExampleSubscriptionEvent.create(eventId.get(), 2),
-                        ExampleSubscriptionEvent.create(eventId.get(), 3)
-                ),
-                events
-        );
+
+
+        ExampleSubscriptionEvent m1 = events.get(0).parseAs(ExampleSubscriptionEvent.class);
+        ExampleSubscriptionEvent m2 = events.get(1).parseAs(ExampleSubscriptionEvent.class);
+        ExampleSubscriptionEvent m3 = events.get(2).parseAs(ExampleSubscriptionEvent.class);
+
+        assertEquals(m1.getData().getNumber(),1);
+        assertEquals(m2.getData().getNumber(),2);
+        assertEquals(m3.getData().getNumber(),3);
+
+
     }
 
     @Test
@@ -343,13 +346,12 @@ public class WebsocketApiClientTest {
         Thread.sleep(100);
 
         assertInstanceOf(ErrorResponseException.class, exception.get());
-        assertEquals(
-                Arrays.asList(
-                        ExampleSubscriptionEvent.create(eventId.get(), 1),
-                        null
-                ),
-                events
-        );
+
+
+        ExampleSubscriptionEvent m1 = events.get(0).parseAs(ExampleSubscriptionEvent.class);
+        Message m2 = events.get(1);
+        assertEquals(m1.getData().getNumber(),1);
+        assertNull(m2);
     }
 
     @Test

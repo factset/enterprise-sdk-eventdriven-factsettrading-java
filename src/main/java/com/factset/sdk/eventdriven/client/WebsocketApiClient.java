@@ -300,22 +300,22 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         if ("ErrorResponse".equals(message.meta.getType())) {
             handleErrorResponse(message, listener);
-        }
+        } else {
             listener.accept(message, null);
-//        }
+        }
 
         return true;
     }
 
     private void handleErrorResponse(IncomingMessage message, MessageListener listener) {
-//        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
-//
-//        try {
-//            ErrorResponse errorResponse = json.readValue(message.json, ErrorResponse.class);
-//            listener.accept(null, new ErrorResponseException(errorResponse.getErrors()));
-//        } catch (JsonProcessingException e) {
-//            listener.accept(null, new MalformedMessageException(e));
-//        }
+        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.getId());
+
+        try {
+            ErrorResponse errorResponse = jsonParser.readValue(message.json, ErrorResponse.class);
+            listener.accept(null, new ErrorResponseException(errorResponse.getErrors()));
+        } catch (JsonProcessingException e) {
+            listener.accept(null, new MalformedMessageException(e));
+        }
 
         logger.debug("Remove subscription listener for id: {}", message.meta.getId());
         messageListeners.remove(message.meta.getId());
