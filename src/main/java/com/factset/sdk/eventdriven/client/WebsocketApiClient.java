@@ -69,7 +69,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         Meta meta;
 
         @JsonIgnore
-        String json;
+        private String json;
 
         @JsonIgnore
         private ObjectMapper jsonParser;
@@ -374,15 +374,6 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
                 .whenComplete((msg, err) -> messageListeners.remove(id));
     }
 
-    private static UnexpectedMessageException newUnexpectedMessageException(String expectedType, IncomingMessage received) {
-        String errorMessage = String.format(
-                "Unexpected message received. Expected: %s. Received: %s",
-                expectedType,
-                received.meta.getType()
-        );
-        return new UnexpectedMessageException(errorMessage, received);
-    }
-
     private int getNextEventId() {
         int nextId;
 
@@ -408,21 +399,6 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         String json = this.jsonParser.writeValueAsString(o);
         logger.debug("Sending data: json={}", json);
         websocket.send(json);
-    }
-
-    private <TResponse> Function<IncomingMessage, TResponse> parseMessage(Class<TResponse> responseType) {
-        String expectedType = responseType.getSimpleName();
-        return text -> {
-            if (!expectedType.equals(text.meta.getType())) {
-                throw newUnexpectedMessageException(expectedType, text);
-            }
-
-            try {
-                return jsonParser.readValue(text.json, responseType);
-            } catch (JsonProcessingException e) {
-                throw new MalformedMessageException(e);
-            }
-        };
     }
 
     @Override
@@ -458,8 +434,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
             });
         } else {
             logger.warn("unknown subscription: id={}", id);
+            return CompletableFuture.completedFuture(null);
         }
-
-        return new CompletableFuture<Void>();
     }
 }
