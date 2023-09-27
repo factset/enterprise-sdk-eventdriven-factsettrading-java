@@ -291,15 +291,7 @@ public class WebsocketApiClientTest {
     @Timeout(2)
     public void subscribe_with_error_response() throws Exception {
         AtomicInteger eventId = new AtomicInteger(0);
-        when(mockWebsocket.send(contains("ExampleSubscriptionRequest"))).thenAnswer(invocation -> {
-            int id = extractIdFromJson(invocation.getArgument(0));
-            eventId.set(id);
-
-            // send immediate Ack
-            AckResponse ack = new AckResponse();
-            ack.getMeta().setId(id);
-            sendMessageToClient(ack);
-
+        mockAckResponseTo("ExampleSubscriptionRequest", id -> {
             // send some events
             AtomicInteger count = new AtomicInteger(0);
             Runnable r = () -> {
@@ -315,8 +307,6 @@ public class WebsocketApiClientTest {
 
             scheduler.schedule(r, 50, TimeUnit.MILLISECONDS);
             scheduler.schedule(r, 70, TimeUnit.MILLISECONDS);
-
-            return null;
         });
 
         client.connectAsync().join();
