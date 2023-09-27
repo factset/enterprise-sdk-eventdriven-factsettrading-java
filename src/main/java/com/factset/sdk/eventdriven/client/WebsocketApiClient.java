@@ -426,7 +426,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     @Override
-    public <TRequest> CompletableFuture<Subscription> subscribe(TRequest request,  BiConsumer<Message, Throwable> callback) {
+    public <TRequest> CompletableFuture<Subscription> subscribe(TRequest request, BiConsumer<Message, Throwable> callback) {
         MessageListener listener = (msg, t) -> {
             if (t != null) {
                 callback.accept(null, t);
@@ -451,10 +451,15 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     private CompletableFuture<Void> cancelSubscription(int id) {
         logger.debug("cancel subscription: id={}", id);
 
-        // send the unsubscribe request
-        return request(new UnsubscribeRequest(id)).thenAccept(message -> {
-            messageListeners.remove(id);
-        });
-    }
+        if (messageListeners.containsKey(id)) {
+            // send the unsubscribe request
+            return request(new UnsubscribeRequest(id)).thenAccept(message -> {
+                messageListeners.remove(id);
+            });
+        } else {
+            logger.warn("unknown subscription: id={}", id);
+        }
 
+        return new CompletableFuture<Void>();
+    }
 }

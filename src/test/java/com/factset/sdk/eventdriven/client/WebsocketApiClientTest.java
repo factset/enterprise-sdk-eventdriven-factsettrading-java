@@ -452,7 +452,6 @@ class ExampleSubscriptionEvent {
     static ExampleSubscriptionEvent create(int id, int n) {
         ExampleSubscriptionEvent e = new ExampleSubscriptionEvent();
         e.meta.setId(id);
-        ;
         e.data.number = n;
         return e;
     }

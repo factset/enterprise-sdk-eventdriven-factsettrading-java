@@ -36,8 +36,6 @@ public class OrderUpdateApi {
 
         private Consumer<OrderUpdateEvent> onOrderUpdateEvent;
 
-        private Consumer<ErrorResponse> onErrorResponse;
-
         private Consumer<Meta> onMeta;
         private Consumer<Throwable> onError;
 
@@ -69,7 +67,9 @@ public class OrderUpdateApi {
 
                 if (messageHandler(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
                 if (messageHandler(msg, Meta.class, onMeta)) return;
-                onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
+                if (onError != null) {
+                    onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
+                }
             });
         }
 
@@ -88,8 +88,6 @@ public class OrderUpdateApi {
             }
             return false;
         }
-
-
     }
 }
 
