@@ -1,7 +1,7 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.OrderType;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.Side;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.TimeInForce;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.OrderType;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.Side;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.TimeInForce;
 import lombok.Data;
 import java.util.List;
 import java.util.Map;

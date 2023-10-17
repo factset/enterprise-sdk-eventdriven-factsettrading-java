@@ -1,5 +1,5 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.OrderStatus;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.OrderStatus;
 import lombok.Data;
 
 @Data

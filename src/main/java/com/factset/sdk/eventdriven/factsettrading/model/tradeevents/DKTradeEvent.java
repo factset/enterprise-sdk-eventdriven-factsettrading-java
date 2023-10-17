@@ -1,8 +1,8 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
 
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.IdSource;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.SecurityType;
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.Side;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.IdSource;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.SecurityType;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.Side;
 import lombok.Data;
 
 @Data
