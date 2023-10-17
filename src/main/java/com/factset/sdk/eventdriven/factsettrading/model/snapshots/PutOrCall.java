@@ -1,4 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading.model.snapshots;
 
-public class ParentOrderSnapshots {
+public enum PutOrCall {
+    put,
+    call
 }

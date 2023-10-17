@@ -1,4 +1,7 @@
 package com.factset.sdk.eventdriven.factsettrading.model.snapshots;
 
-public class OutboundOrderSnapshots {
+public enum ReportToExchange {
+    ReceiverReports,
+    SenderReports
+
 }

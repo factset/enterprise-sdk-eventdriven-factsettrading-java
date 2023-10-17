@@ -1,4 +1,5 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.OrderStatus;
 import lombok.Data;
 
 @Data
@@ -7,7 +8,7 @@ public class CancelRejectEvent {
     String account;
     String clientOrderId;
     String orderId;
-    String orderStatus;
+    OrderStatus orderStatus;
     String originalClientOrderId;
     String symbol;
     String text;

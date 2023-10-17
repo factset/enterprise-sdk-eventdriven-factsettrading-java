@@ -1,16 +1,20 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
 
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.IdSource;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.PutOrCall;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.SecurityType;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.Side;
 import lombok.Data;
 
 @Data
 public class OrderStatusEvent {
     BasicMessage basicMessage;
     String clientOrderId;
-    String idSource;
+    IdSource idSource;
     String orderId;
     Double price;
     String securityId;
-    String side;
+    Side side;
     String symbol;
     String symbolSuffix;
     String issuer;
@@ -18,9 +22,9 @@ public class OrderStatusEvent {
     String securityDescription;
     String securityExchange;
     String clientId;
-    String securityType;
+    SecurityType securityType;
     String maturityMonthYear;
-    String putOrCall;
+    PutOrCall putOrCall;
     Double strikePrice;
     String maturityDay;
     String optionAttribute;

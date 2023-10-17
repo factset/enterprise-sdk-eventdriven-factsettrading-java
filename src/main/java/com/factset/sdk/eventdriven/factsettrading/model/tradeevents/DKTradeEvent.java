@@ -1,18 +1,21 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
 
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.IdSource;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.SecurityType;
+import com.factset.sdk.eventdriven.factsettrading.model.snapshots.Side;
 import lombok.Data;
 
 @Data
 public class DKTradeEvent {
     BasicMessage basicMessage;
     String executionId;
-    String idSource;
+    IdSource idSource;
     Double lastPrice;
     Double lastQuantity;
     String orderId;
     Double orderQuantity;
     String securityId;
-    String side;
+    Side side;
     String symbol;
     String text;
     String symbolSuffix;
@@ -20,6 +23,6 @@ public class DKTradeEvent {
     String securityDescription;
     String dontKnowReason;
     Double cashOrderQuantity;
-    String securityType;
+    SecurityType securityType;
     String ticketId;
 }
