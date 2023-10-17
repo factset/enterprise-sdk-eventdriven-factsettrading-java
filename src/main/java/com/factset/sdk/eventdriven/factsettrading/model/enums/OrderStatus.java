@@ -1,9 +1,10 @@
-package com.factset.sdk.eventdriven.factsettrading.model.snapshots;
+package com.factset.sdk.eventdriven.factsettrading.model.enums;
 
-public enum ExecutionType {
+public enum OrderStatus {
+    
     New,
-    partialFill,
-    fill,
+    partiallyFilled,
+    filled,
     doneForDay,
     canceled,
     replaced,
@@ -14,6 +15,6 @@ public enum ExecutionType {
     pendingNew,
     calculated,
     expired,
-    restated,
+    acceptedForBidding,
     pendingReplace
 }

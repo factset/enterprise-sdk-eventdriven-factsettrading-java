@@ -1,6 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
 
-import com.factset.sdk.eventdriven.factsettrading.model.snapshots.*;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.*;
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package com.factset.sdk.eventdriven.factsettrading.model.snapshots;
+package com.factset.sdk.eventdriven.factsettrading.model.enums;
 
 public enum ReportToExchange {
     ReceiverReports,
