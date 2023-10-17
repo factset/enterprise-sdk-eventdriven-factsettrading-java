@@ -1,0 +1,78 @@
+package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+
+import lombok.Data;
+
+@Data
+public class ExecutionEvent {
+    BasicMessage basicMessage;
+    String account;
+    Double averagePrice;
+    String clientOrderId;
+    Double commission;
+    String commissionType;
+    String currency;
+    Double cumulativeQuantity;
+    String executionId;
+    String executionInstruction;
+    String executionReferenceId;
+    String executionTransactionType;
+    String idSource;
+    String lastCapacity;
+    String lastMarket;
+    Double lastPrice;
+    Double lastQuantity;
+    String orderId;
+    Double orderQuantity;
+    String orderStatus;
+    String orderType;
+    String originalClientOrderId;
+    Double price;
+    String rule80A;
+    String securityId;
+    String side;
+    String symbol;
+    String text;
+    String timeInForce;
+    String transactTime;
+    String settlementType;
+    String settlementDate;
+    String symbolSuffix;
+    String listId;
+    String tradeDate;
+    String executingBroker;
+    Double stopPrice;
+    Integer orderRejectReason;
+    String issuer;
+    String securityDescription;
+    String clientId;
+    Double minimumQuantity;
+    String reportToExchange;
+    String settlementCurrencyAmount;
+    String settlementCurrency;
+    String expireTime;
+    String executionType;
+    Double leavesQuantity;
+    Double settlementCurrencyFxRate;
+    String settlementCurrencyFxRateCalc;
+    Double orderQuantity2;
+    String securityType;
+    String settlementDate2;
+    Double lastSpotRate;
+    Double lastForwardPoIntegers;
+    String secondaryOrderId;
+    String maturityMonthYear;
+    String putOrCall;
+    Double strikePrice;
+    String maturityDay;
+    String optionAttribute;
+    String securityExchange;
+    Double pegDifference;
+    Integer executionRestatementReason;
+    String expireDate;
+    Double price2;
+    Double lastForwardPoIntegers2;
+    String ticketId;
+    Double referenceFillPrice;
+    Double referenceFillQuantity;
+}
+

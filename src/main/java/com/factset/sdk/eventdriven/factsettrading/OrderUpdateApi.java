@@ -3,8 +3,9 @@ package com.factset.sdk.eventdriven.factsettrading;
 import com.factset.sdk.eventdriven.client.*;
 import com.factset.sdk.eventdriven.factsettrading.model.Meta;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
-import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
 
+import com.factset.sdk.eventdriven.factsettrading.model.Snapshot;
+import com.factset.sdk.eventdriven.factsettrading.model.TradeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,22 +33,22 @@ public class OrderUpdateApi {
     public class OrderUpdateSubscription {
 
         private final OrderSubscriptionRequest request;
+        private Consumer<Snapshot> onSnapshotEvent;
+        private Consumer<TradeEvent> onTradeEvent;
 
-        private Consumer<OrderUpdateEvent> onOrderUpdateEvent;
-        private Consumer<Meta> onMeta;
         private Consumer<Throwable> onError = t -> logger.warn("Exception in subscription", t);
 
         public OrderUpdateSubscription(OrderSubscriptionRequest request) {
             this.request = request;
         }
 
-        public OrderUpdateSubscription onOrderUpdateEvent(Consumer<OrderUpdateEvent> onOrderUpdateEvent) {
-            this.onOrderUpdateEvent = onOrderUpdateEvent;
+        public OrderUpdateSubscription onSnapshotEvent(Consumer<Snapshot> onSnapshotEvent) {
+            this.onSnapshotEvent = onSnapshotEvent;
             return this;
         }
 
-        public OrderUpdateSubscription onMeta(Consumer<Meta> onMeta) {
-            this.onMeta = onMeta;
+        public OrderUpdateSubscription onTradeEvent(Consumer<TradeEvent> onTradeEvent) {
+            this.onTradeEvent = onTradeEvent;
             return this;
         }
 
@@ -63,8 +64,8 @@ public class OrderUpdateApi {
                     return;
                 }
 
-                if (handleMessage(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
-                if (handleMessage(msg, Meta.class, onMeta)) return;
+                if (handleMessage(msg, Snapshot.class, onSnapshotEvent)) return;
+                if (handleMessage(msg, TradeEvent.class, onTradeEvent)) return;
 
                 onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
             });
@@ -74,6 +75,7 @@ public class OrderUpdateApi {
             if (messageClass.getSimpleName().equals(msg.getType())) {
                 if (handler != null) {
                     try {
+
                         handler.accept(msg.parseAs(messageClass));
                     } catch (MalformedMessageException ex) {
                         onError.accept(ex);

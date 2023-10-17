@@ -1,0 +1,72 @@
+package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+
+import lombok.Data;
+
+@Data
+public class OrderReplaceEvent {
+    BasicMessage basicMessage;
+    String account;
+    String clientOrderId;
+    Double commission;
+    String commissionType;
+    String currency;
+    String executionInstruction;
+    String handlingInstruction;
+    String idSource;
+    String ioiId;
+    String orderId;
+    Double orderQuantity;
+    String orderType;
+    String originalClientOrderId;
+    Double price;
+    String rule80A;
+    String securityId;
+    String side;
+    String symbol;
+    String text;
+    String timeInForce;
+    String transactTime;
+    String settlementType;
+    String settlementDate;
+    String symbolSuffix;
+    String listId;
+    String executionBroker;
+    String openClose;
+    Double stopPrice;
+    String executionDestination;
+    String waveNo;
+    String issuer;
+    String securityDescription;
+    String clientId;
+    Double minimumQuantity;
+    Double maximumFloor;
+    String reportToExchange;
+    String locateRequired;
+    String settlementCurrency;
+    String forexRequest;
+    String expireTime;
+    Double cashOrderQuantity;
+    String securityType;
+    Double orderQuantity2;
+    String settlementDate2;
+    String maturityMonthYear;
+    String putOrCall;
+    Double strikePrice;
+    String coveredOrUncovered;
+    String customerOrFirm;
+    String maturityDay;
+    String optionAttribute;
+    String securityExchange;
+    Double maximumShow;
+    Double pegDifference;
+    String discretionInstruction;
+    Double discretionOffset;
+    String expireDate;
+    String product;
+    String cfiCode;
+    String ticketId;
+    String status;
+    Integer pegSelectionIndex;
+    Boolean isProcessed;
+}
+
