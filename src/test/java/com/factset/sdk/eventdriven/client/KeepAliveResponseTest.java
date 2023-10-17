@@ -1,6 +1,6 @@
-package com.factset.sdk.eventdriven.model;
+package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.model.KeepAliveResponse;
+import com.factset.sdk.eventdriven.client.KeepAliveResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

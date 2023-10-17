@@ -1,7 +1,7 @@
-package com.factset.sdk.eventdriven.model;
+package com.factset.sdk.eventdriven.client;
 
 @lombok.Data
-public class UnsubscribeRequest {
+class UnsubscribeRequest {
     Meta meta = Meta.forClass(UnsubscribeRequest.class);
     Data data = new Data();
 

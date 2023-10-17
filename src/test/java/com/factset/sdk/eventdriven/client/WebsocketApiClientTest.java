@@ -1,6 +1,5 @@
 package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.model.*;
 import com.factset.sdk.utils.authentication.ConfidentialClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

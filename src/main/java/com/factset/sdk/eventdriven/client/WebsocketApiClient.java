@@ -1,6 +1,5 @@
 package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.model.*;
 import com.factset.sdk.utils.authentication.OAuth2Client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,7 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 import static com.factset.sdk.eventdriven.client.ExtractedMeta.extractMeta;
 
