@@ -41,7 +41,7 @@ public class OrderUpdateEvent {
     Double minimumQuantity;
     Double maximumFloor;
     ReportToExchange reportToExchange;
-    String locateRequired;
+    Boolean locateRequired;
     String quoteId;
     String settlementCurrency;
     ForexRequest forexRequest;

@@ -42,7 +42,7 @@ public class OrderReplaceEvent {
     Double minimumQuantity;
     Double maximumFloor;
     ReportToExchange reportToExchange;
-    String locateRequired;
+    Boolean locateRequired;
     String settlementCurrency;
     ForexRequest forexRequest;
     String expireTime;
