@@ -1,4 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.CancelRejectReason;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.CancelRejectResponseTo;
 import com.factset.sdk.eventdriven.factsettrading.model.enums.OrderStatus;
 import lombok.Data;
 
@@ -15,10 +17,10 @@ public class CancelRejectEvent {
     String transactionTime;
     String listId;
     String executingBroker;
-    String cancelRejectReason;
+    CancelRejectReason cancelRejectReason;
     String clientId;
     String secondaryOrderId;
-    String cancelRejectResponseTo;
+    CancelRejectResponseTo cancelRejectResponseTo;
     Double orderQuantity;
     String ticketId;
     Double price;

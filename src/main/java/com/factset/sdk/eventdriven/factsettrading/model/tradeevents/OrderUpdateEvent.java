@@ -69,7 +69,7 @@ public class OrderUpdateEvent {
     String cfiCode;
     Double price2;
     Integer pegSelectionIndex;
-    String cancelType;
+    CancelType cancelType;
     Double bidPrice;
     Double askPrice;
     Double lastPrice;

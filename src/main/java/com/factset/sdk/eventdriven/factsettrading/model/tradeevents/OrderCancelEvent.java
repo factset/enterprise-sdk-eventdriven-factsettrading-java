@@ -1,8 +1,5 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.IdSource;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.PutOrCall;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.SecurityType;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.Side;
+import com.factset.sdk.eventdriven.factsettrading.model.enums.*;
 import lombok.Data;
 
 @Data
@@ -27,7 +24,7 @@ public class OrderCancelEvent {
     String issuer;
     String securityDescription;
     String clientId;
-    String cancelType;
+    CancelType cancelType;
     Double cashOrderQuantity;
     SecurityType securityType;
     String maturityMonthYear;
