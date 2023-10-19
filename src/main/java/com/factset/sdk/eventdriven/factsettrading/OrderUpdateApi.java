@@ -2,8 +2,9 @@ package com.factset.sdk.eventdriven.factsettrading;
 
 import com.factset.sdk.eventdriven.client.*;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
-import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
 
+import com.factset.sdk.eventdriven.factsettrading.model.SnapshotEvent;
+import com.factset.sdk.eventdriven.factsettrading.model.TradeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,8 @@ public class OrderUpdateApi {
     public class OrderUpdateSubscription {
 
         private final OrderSubscriptionRequest request;
-
-        private Consumer<OrderUpdateEvent> onOrderUpdateEvent;
+        private Consumer<SnapshotEvent> onSnapshotEvent;
+        private Consumer<TradeEvent> onTradeEvent;
 
         private Consumer<Throwable> onError = t -> logger.warn("Exception in subscription", t);
 
@@ -34,8 +35,13 @@ public class OrderUpdateApi {
             this.request = request;
         }
 
-        public OrderUpdateSubscription onOrderUpdateEvent(Consumer<OrderUpdateEvent> onOrderUpdateEvent) {
-            this.onOrderUpdateEvent = onOrderUpdateEvent;
+        public OrderUpdateSubscription onSnapshotEvent(Consumer<SnapshotEvent> onSnapshotEvent) {
+            this.onSnapshotEvent = onSnapshotEvent;
+            return this;
+        }
+
+        public OrderUpdateSubscription onTradeEvent(Consumer<TradeEvent> onTradeEvent) {
+            this.onTradeEvent = onTradeEvent;
             return this;
         }
 
@@ -51,7 +57,8 @@ public class OrderUpdateApi {
                     return;
                 }
 
-                if (handleMessage(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
+                if (handleMessage(msg, SnapshotEvent.class, onSnapshotEvent)) return;
+                if (handleMessage(msg, TradeEvent.class, onTradeEvent)) return;
 
                 onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
             });
