@@ -19,12 +19,6 @@ public class OrderUpdateApi {
         this.client = client;
     }
 
-//    public CompletableFuture<Subscription> subscribeOrderUpdates(BiConsumer<OrderUpdateEvent, Throwable> callback) {
-//        List<String> subscribeList = Arrays.asList("orderupdates");
-//        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
-//        return client.subscribe(request, OrderUpdateEvent.class, callback);
-//    }
-
     public OrderUpdateSubscription subscribeOrderUpdates(OrderSubscriptionRequest request) {
         return new OrderUpdateSubscription(request);
     }
@@ -34,7 +28,7 @@ public class OrderUpdateApi {
         private final OrderSubscriptionRequest request;
 
         private Consumer<OrderUpdateEvent> onOrderUpdateEvent;
-        private Consumer<Meta> onMeta;
+
         private Consumer<Throwable> onError = t -> logger.warn("Exception in subscription", t);
 
         public OrderUpdateSubscription(OrderSubscriptionRequest request) {
@@ -43,11 +37,6 @@ public class OrderUpdateApi {
 
         public OrderUpdateSubscription onOrderUpdateEvent(Consumer<OrderUpdateEvent> onOrderUpdateEvent) {
             this.onOrderUpdateEvent = onOrderUpdateEvent;
-            return this;
-        }
-
-        public OrderUpdateSubscription onMeta(Consumer<Meta> onMeta) {
-            this.onMeta = onMeta;
             return this;
         }
 
@@ -64,7 +53,6 @@ public class OrderUpdateApi {
                 }
 
                 if (handleMessage(msg, OrderUpdateEvent.class, onOrderUpdateEvent)) return;
-                if (handleMessage(msg, Meta.class, onMeta)) return;
 
                 onError.accept(new UnexpectedMessageException("Unexpected Message", msg));
             });

@@ -8,7 +8,7 @@ class Meta {
     String type;
     long timeout;
 
-    public static Meta forClass(Class<?> model) {
+    static Meta forClass(Class<?> model) {
         Meta meta = new Meta();
         meta.setType(model.getSimpleName());
         return meta;
