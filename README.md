@@ -83,8 +83,8 @@ Snapshot releases are cached by gradle for some time, for details see: [Gradle D
 
 1. [Generate OAuth 2.0 authentication credentials](https://developer.factset.com/learn/authentication-oauth2).
 2. Setup Java environment.
-   1. Install and activate Java 1.8+
-   2. Install  [gradle](https://gradle.org/install/)
+    1. Install and activate Java 1.8+
+    2. Install  [gradle](https://gradle.org/install/)
 3. [Install dependencies](#installation).
 4. Run the following code:
 
@@ -101,7 +101,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class ExampleCode {
+public class Console {
 
     private static final Logger logger = LoggerFactory.getLogger("main");
 
