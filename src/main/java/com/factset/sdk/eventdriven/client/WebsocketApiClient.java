@@ -287,7 +287,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
         KeepAliveRequest keepAliveRequest = jsonParser.readValue(message, KeepAliveRequest.class);
         KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.meta.getId());
-        send(keepAliveResponse);
+       send(keepAliveResponse);
 
         connectionIsAlive = true;
 
