@@ -1,7 +1,5 @@
 package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.client.Error;
-import com.factset.sdk.eventdriven.client.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,14 +23,14 @@ public class ErrorResponseTest {
     void fromJsonWithNoErrors() throws JsonProcessingException {
         String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"ErrorResponse\",\"timeout\":0},\"errors\":[]}";
         ErrorResponse response = json.readValue(jsonResponse, ErrorResponse.class);
-        Assertions.assertEquals(0, response.getErrors().size());
+        Assertions.assertEquals(0, response.errors.size());
     }
 
     @Test
     void fromJsonWithMandatoryPropertiesOnly() throws JsonProcessingException {
         String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"ErrorResponse\",\"timeout\":0},\"errors\":[{\"id\":\"test-id\",\"code\":\"test-code\",\"title\":\"test-title\"}]}";
         ErrorResponse response = json.readValue(jsonResponse, ErrorResponse.class);
-        Assertions.assertEquals(1, response.getErrors().size());
+        Assertions.assertEquals(1, response.errors.size());
 
         Error error = new Error();
         error.setId("test-id");
@@ -52,7 +50,7 @@ public class ErrorResponseTest {
     void fromJsonWithFullError() throws JsonProcessingException {
         String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"ErrorResponse\",\"timeout\":0},\"errors\":[{\"id\":\"test-id\",\"code\":\"test-code\",\"title\":\"test-title\",\"links\":{\"about\":\"test-about\"},\"details\":\"test-details\",\"source\":{\"pointer\":\"test-pointer\",\"parameter\":\"test-parameter\"}}]}";
         ErrorResponse response = json.readValue(jsonResponse, ErrorResponse.class);
-        Assertions.assertEquals(1, response.getErrors().size());
+        Assertions.assertEquals(1, response.errors.size());
 
         Error error = new Error();
         error.setId("test-id");

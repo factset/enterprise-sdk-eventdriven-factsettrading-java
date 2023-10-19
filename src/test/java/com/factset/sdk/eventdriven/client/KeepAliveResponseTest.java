@@ -1,6 +1,5 @@
 package com.factset.sdk.eventdriven.client;
 
-import com.factset.sdk.eventdriven.client.KeepAliveResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +24,7 @@ class KeepAliveResponseTest {
         String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"KeepAliveResponse\",\"timeout\":0},\"data\":{\"datetime\":\"2022-03-14T09:33:52.123Z\"}}";
 
         KeepAliveResponse response = json.readValue(jsonResponse, KeepAliveResponse.class);
-        Assertions.assertEquals(instantDateTime, response.getData().getDatetime());
+        Assertions.assertEquals(instantDateTime, response.data.datetime);
     }
 
     @Test
@@ -35,14 +34,14 @@ class KeepAliveResponseTest {
         String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"KeepAliveResponse\",\"timeout\":0},\"data\":{\"datetime\":\"2022-03-14T09:33:52.123+00:00\"}}";
 
         KeepAliveResponse response = json.readValue(jsonResponse, KeepAliveResponse.class);
-        Assertions.assertEquals(instantDateTime, response.getData().getDatetime());
+        Assertions.assertEquals(instantDateTime, response.data.datetime);
     }
 
     @Test
     void toJson() throws JsonProcessingException {
         KeepAliveResponse response = new KeepAliveResponse();
-        response.getData().setDatetime(Instant.parse("2022-03-14T09:33:52.123Z"));
-        response.getMeta().setId(1);
+        response.data.datetime = Instant.parse("2022-03-14T09:33:52.123Z");
+        response.meta.id = 1;
 
         Assertions.assertEquals("{\"meta\":{\"id\":1,\"type\":\"KeepAliveResponse\",\"timeout\":0},\"data\":{\"datetime\":\"2022-03-14T09:33:52.123Z\"}}", json.writeValueAsString(response));
     }

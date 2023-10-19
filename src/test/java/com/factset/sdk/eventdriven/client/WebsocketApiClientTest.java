@@ -100,9 +100,9 @@ public class WebsocketApiClientTest {
             String message = invocation.getArgument(0);
 
             ConfigurationResponse response = new ConfigurationResponse();
-            response.getData().setSessionId("");
-            response.getData().setMaximumIdleInterval(1000);
-            response.getMeta().setId(extractIdFromJson(message));
+            response.data.sessionId = "";
+            response.data.maximumIdleInterval = 1000;
+            response.meta.id = extractIdFromJson(message);
 
             sendMessageToClient(response);
 
@@ -141,9 +141,9 @@ public class WebsocketApiClientTest {
             String message = invocation.getArgument(0);
 
             ConfigurationResponse response = new ConfigurationResponse();
-            response.getData().setSessionId("");
-            response.getData().setMaximumIdleInterval(50);
-            response.getMeta().setId(extractIdFromJson(message));
+            response.data.sessionId = "";
+            response.data.maximumIdleInterval = 50;
+            response.meta.id = extractIdFromJson(message);
 
             sendMessageToClient(response);
 
@@ -167,16 +167,16 @@ public class WebsocketApiClientTest {
     @Timeout(2)
     public void request_works() {
         ConfigurationRequest request = new ConfigurationRequest();
-        request.getData().setMaximumIdleInterval(23456);
+        request.data.maximumIdleInterval = 23456;
 
         ConfigurationResponse expectedResponse = new ConfigurationResponse();
-        expectedResponse.getData().setSessionId("");
-        expectedResponse.getData().setMaximumIdleInterval(1000);
+        expectedResponse.data.sessionId = "";
+        expectedResponse.data.maximumIdleInterval = 1000;
 
         Mockito.reset(mockWebsocket);
         when(mockWebsocket.send(contains("ConfigurationRequest"))).thenAnswer(invocation -> {
             String json = invocation.getArgument(0);
-            expectedResponse.getMeta().setId(extractIdFromJson(json));
+            expectedResponse.meta.id = extractIdFromJson(json);
 
             sendMessageToClient(expectedResponse);
 
@@ -194,14 +194,14 @@ public class WebsocketApiClientTest {
     @Timeout(2)
     public void request_with_error_response_works() {
         ConfigurationRequest request = new ConfigurationRequest();
-        request.getData().setMaximumIdleInterval(23456);
+        request.data.maximumIdleInterval = 23456;
 
         ErrorResponse expectedResponse = buildErrorResponse();
 
         Mockito.reset(mockWebsocket);
         when(mockWebsocket.send(contains("ConfigurationRequest"))).thenAnswer(invocation -> {
             String json = invocation.getArgument(0);
-            expectedResponse.getMeta().setId(extractIdFromJson(json));
+            expectedResponse.meta.id = extractIdFromJson(json);
 
             sendMessageToClient(expectedResponse);
 
@@ -225,7 +225,7 @@ public class WebsocketApiClientTest {
     @Timeout(2)
     public void request_with_timeout_works() throws Exception {
         ExampleRequest request = new ExampleRequest();
-        request.meta.setTimeout(50);
+        request.meta.timeout = 50;
 
         try {
             client.connectAsync().thenCompose(c ->
@@ -298,7 +298,7 @@ public class WebsocketApiClientTest {
                     sendMessageToClient(ExampleSubscriptionEvent.create(id, count.incrementAndGet()));
                 } else {
                     ErrorResponse errorResponse = buildErrorResponse();
-                    errorResponse.getMeta().setId(id);
+                    e.meta.id = id;
                     sendMessageToClient(errorResponse);
                 }
 
