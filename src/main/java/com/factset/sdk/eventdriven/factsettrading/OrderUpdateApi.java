@@ -1,7 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading;
 
 import com.factset.sdk.eventdriven.client.*;
-import com.factset.sdk.eventdriven.factsettrading.model.Meta;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
 import com.factset.sdk.eventdriven.factsettrading.model.OrderUpdateEvent;
 
