@@ -142,7 +142,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
     private CompletableFuture<Void> configureConnection() {
         ConfigurationRequest request = new ConfigurationRequest();
-        request.getData().setMaximumIdleInterval(options.maximumIdleInterval.toMillis());
+        request.data.maximumIdleInterval = options.maximumIdleInterval.toMillis();
 
         return request(request)
                 .thenAccept(message -> {
@@ -310,7 +310,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private void handleErrorResponse(IncomingMessage message, MessageListener listener) {
-        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.getId());
+        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
 
         try {
             ErrorResponse errorResponse = jsonParser.readValue(message.json, ErrorResponse.class);
@@ -319,8 +319,8 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
             listener.accept(null, new MalformedMessageException(e));
         }
 
-        logger.debug("Remove subscription listener for id: {}", message.meta.getId());
-        messageListeners.remove(message.meta.getId());
+        logger.debug("Remove subscription listener for id: {}", message.meta.id);
+        messageListeners.remove(message.meta.id);
     }
 
     @Override
