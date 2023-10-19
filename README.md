@@ -98,42 +98,50 @@ import com.factset.sdk.utils.authentication.ConfidentialClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Console {
 
     private static final Logger logger = LoggerFactory.getLogger("main");
 
-    public static void main(String[] args) throws Exception {
-        ConfidentialClient confidentialClient = new ConfidentialClient("/path/to/config/file");
+   public static void main(String[] args) throws Exception {
+      ConfidentialClient confidentialClient = new ConfidentialClient("/path/to/config/file");
 
-        // initialize the websocket client
-        WebsocketApiClient client = new WebsocketApiClient(
-                WebsocketApiClient.Options.builder()
-                        .url("https://api.factset.com/streaming/trading/ems/v0")
-                        .authorizer(confidentialClient)
-                        .build()
-        ).connectAsync().join();
+      // initialize the websocket client
+      WebsocketApiClient client = new WebsocketApiClient(
+              WebsocketApiClient.Options.builder()
+                      .url("https://api.factset.com/streaming/trading/ems/v0")
+                      .authorizer(confidentialClient)
+                      .build()
+      ).connectAsync().join();
 
-        // initialize the order update api
-        OrderUpdateApi api = new OrderUpdateApi(client);
+      // initialize the order update api
+      OrderUpdateApi api = new OrderUpdateApi(client);
 
-        // subscribe to order updates
-        Subscription subscription = api.subscribeOrderUpdates((update, t) -> {
-            if (t != null) {
-                logger.warn("something went wrong: {}", t.getMessage());
-            } else {
-                logger.info("order update: {}", update);
-            }
-        }).join();
+      // subscribe to order updates
+      List<String> subscribeList = Collections.singletonList("orderupdates");
+      OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
 
-        // wait
-        Thread.sleep(10000);
+      Subscription subscription = api.subscribeOrderUpdates(request)
+              .onOrderUpdateEvent((orderUpdateEvent) -> {
+                 logger.info(orderUpdateEvent.toString());
+              })
+              .onError((exception) -> {
+                 logger.error(exception.toString());
+              })
+              .subscribe()
+              .join();
 
-        // cancel the subscription
-        subscription.cancel();
+      // wait
+      Thread.sleep(10000);
 
-        // close the websocket connection        
-        client.disconnectAsync().join();
-    }
+      // cancel the subscription
+      subscription.cancel();
+
+      // close the websocket connection        
+      client.disconnectAsync().join();
+   }
 }
 ```
 
