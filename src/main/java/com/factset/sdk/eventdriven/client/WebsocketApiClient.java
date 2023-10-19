@@ -266,7 +266,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
                 return;
             }
 
-            logger.debug("Received Unhandled Message: {}", meta.getType());
+            logger.debug("Received Unhandled Message: {}", meta.type);
 
         } catch (JsonProcessingException | NullPointerException e) {
             logger.error("Could not parse incoming message: {} message={}", e, message);
@@ -274,7 +274,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleSystemMessages(IncomingMessage message) throws JsonProcessingException {
-        switch (message.meta.getType()) {
+        switch (message.meta.type) {
             case "KeepAliveRequest":
                 return handleKeepAliveRequest(message.json);
             default:
@@ -286,7 +286,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         logger.debug("Handle KeepAliveRequest");
 
         KeepAliveRequest keepAliveRequest = jsonParser.readValue(message, KeepAliveRequest.class);
-        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.getMeta().getId());
+        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.meta.getId());
         send(keepAliveResponse);
 
         connectionIsAlive = true;
