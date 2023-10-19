@@ -21,9 +21,9 @@ Add the below dependency to the project's POM:
 ```xml
 
 <dependency>
-    <groupId>com.factset.sdk.eventdriven</groupId>
-    <artifactId>factsettrading</artifactId>
-    <version>1.0.0</version>
+   <groupId>com.factset.sdk.eventdriven</groupId>
+   <artifactId>factsettrading</artifactId>
+   <version>1.0.0</version>
 </dependency>
 ```
 
@@ -33,11 +33,11 @@ Add these dependencies to your project's build file:
 
 ```groovy
 repositories {
-    mavenCentral()
+   mavenCentral()
 }
 
 dependencies {
-    implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
+   implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
 }
 ```
 
@@ -49,17 +49,17 @@ To be able to install snapshot releases of the sdk an additional repository must
 
 ```xml
 <repositories>
-    <repository>
-        <id>sonatype</id>
-        <name>sonatype-snapshot</name>
-        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-    </repository>
+   <repository>
+      <id>sonatype</id>
+      <name>sonatype-snapshot</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <snapshots>
+         <enabled>true</enabled>
+      </snapshots>
+      <releases>
+         <enabled>false</enabled>
+      </releases>
+   </repository>
 </repositories>
 ```
 
@@ -67,13 +67,13 @@ To be able to install snapshot releases of the sdk an additional repository must
 
 ```groovy
 repositories {
-    mavenCentral()
-    maven {
-        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
+   mavenCentral()
+   maven {
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+      mavenContent {
+         snapshotsOnly()
+      }
+   }
 }
 ```
 
@@ -83,8 +83,8 @@ Snapshot releases are cached by gradle for some time, for details see: [Gradle D
 
 1. [Generate OAuth 2.0 authentication credentials](https://developer.factset.com/learn/authentication-oauth2).
 2. Setup Java environment.
-    1. Install and activate Java 1.8+
-    2. Install  [gradle](https://gradle.org/install/)
+   1. Install and activate Java 1.8+
+   2. Install  [gradle](https://gradle.org/install/)
 3. [Install dependencies](#installation).
 4. Run the following code:
 
@@ -101,47 +101,47 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-public class Console {
+public class ExampleCode {
 
     private static final Logger logger = LoggerFactory.getLogger("main");
 
-   public static void main(String[] args) throws Exception {
-      ConfidentialClient confidentialClient = new ConfidentialClient("/path/to/config/file");
+    public static void main(String[] args) throws Exception {
+        ConfidentialClient confidentialClient = new ConfidentialClient("/path/to/config/file");
 
-      // initialize the websocket client
-      WebsocketApiClient client = new WebsocketApiClient(
-              WebsocketApiClient.Options.builder()
-                      .url("https://api.factset.com/streaming/trading/ems/v0")
-                      .authorizer(confidentialClient)
-                      .build()
-      ).connectAsync().join();
+        // initialize the websocket client
+        WebsocketApiClient client = new WebsocketApiClient(
+                WebsocketApiClient.Options.builder()
+                        .url("https://api.factset.com/streaming/trading/ems/v0")
+                        .authorizer(confidentialClient)
+                        .build()
+        ).connectAsync().join();
 
-      // initialize the order update api
-      OrderUpdateApi api = new OrderUpdateApi(client);
+        // initialize the order update api
+        OrderUpdateApi api = new OrderUpdateApi(client);
 
-      // subscribe to order updates
-      List<String> subscribeList = Collections.singletonList("orderupdates");
-      OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
+        // subscribe to order updates
+        List<String> subscribeList = Collections.singletonList("orderupdates");
+        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
 
-      Subscription subscription = api.subscribeOrderUpdates(request)
-              .onOrderUpdateEvent((orderUpdateEvent) -> {
-                 logger.info(orderUpdateEvent.toString());
-              })
-              .onError((exception) -> {
-                 logger.error(exception.toString());
-              })
-              .subscribe()
-              .join();
+        Subscription subscription = api.subscribeOrderUpdates(request)
+                .onOrderUpdateEvent((orderUpdateEvent) -> {
+                    logger.info(orderUpdateEvent.toString());
+                })
+                .onError((exception) -> {
+                    logger.error(exception.toString());
+                })
+                .subscribe()
+                .join();
 
-      // wait
-      Thread.sleep(10000);
+        // wait
+        Thread.sleep(10000);
 
-      // cancel the subscription
-      subscription.cancel();
+        // cancel the subscription
+        subscription.cancel();
 
-      // close the websocket connection        
-      client.disconnectAsync().join();
-   }
+        // close the websocket connection
+        client.disconnectAsync().join();
+    }
 }
 ```
 
