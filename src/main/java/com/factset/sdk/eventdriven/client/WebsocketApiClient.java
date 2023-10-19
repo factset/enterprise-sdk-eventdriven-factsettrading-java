@@ -295,12 +295,12 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleApiMessage(IncomingMessage message) {
-        MessageListener listener = messageListeners.get(message.meta.getId());
+        MessageListener listener = messageListeners.get(message.meta.id);
         if (listener == null) {
             return false;
         }
 
-        if ("ErrorResponse".equals(message.meta.getType())) {
+        if ("ErrorResponse".equals(message.meta.type)) {
             handleErrorResponse(message, listener);
         } else {
             listener.accept(message, null);
