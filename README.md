@@ -21,9 +21,9 @@ Add the below dependency to the project's POM:
 ```xml
 
 <dependency>
-   <groupId>com.factset.sdk.eventdriven</groupId>
-   <artifactId>factsettrading</artifactId>
-   <version>1.0.0</version>
+    <groupId>com.factset.sdk.eventdriven</groupId>
+    <artifactId>factsettrading</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -33,11 +33,11 @@ Add these dependencies to your project's build file:
 
 ```groovy
 repositories {
-   mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-   implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
+    implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
 }
 ```
 
@@ -49,17 +49,17 @@ To be able to install snapshot releases of the sdk an additional repository must
 
 ```xml
 <repositories>
-   <repository>
-      <id>sonatype</id>
-      <name>sonatype-snapshot</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-      <snapshots>
-         <enabled>true</enabled>
-      </snapshots>
-      <releases>
-         <enabled>false</enabled>
-      </releases>
-   </repository>
+    <repository>
+        <id>sonatype</id>
+        <name>sonatype-snapshot</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+    </repository>
 </repositories>
 ```
 
@@ -67,13 +67,13 @@ To be able to install snapshot releases of the sdk an additional repository must
 
 ```groovy
 repositories {
-   mavenCentral()
-   maven {
-      url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-      mavenContent {
-         snapshotsOnly()
-      }
-   }
+    mavenCentral()
+    maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
 }
 ```
 
