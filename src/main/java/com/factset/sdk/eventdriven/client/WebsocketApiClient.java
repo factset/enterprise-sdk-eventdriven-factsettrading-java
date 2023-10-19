@@ -142,7 +142,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
 
     private CompletableFuture<Void> configureConnection() {
         ConfigurationRequest request = new ConfigurationRequest();
-        request.getData().setMaximumIdleInterval(options.maximumIdleInterval.toMillis());
+        request.data.maximumIdleInterval = options.maximumIdleInterval.toMillis();
 
         return request(request)
                 .thenAccept(message -> {

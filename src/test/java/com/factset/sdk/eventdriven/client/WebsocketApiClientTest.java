@@ -298,7 +298,7 @@ public class WebsocketApiClientTest {
                     sendMessageToClient(ExampleSubscriptionEvent.create(id, count.incrementAndGet()));
                 } else {
                     ErrorResponse errorResponse = buildErrorResponse();
-                    e.meta.id = id;
+                    errorResponse.meta.id = id;
                     sendMessageToClient(errorResponse);
                 }
 
@@ -469,7 +469,7 @@ class ExampleSubscriptionEvent {
 
     static ExampleSubscriptionEvent create(int id, int n) {
         ExampleSubscriptionEvent e = new ExampleSubscriptionEvent();
-        e.meta.setId(id);
+        e.meta.id = id;
         e.data.number = n;
         return e;
     }
