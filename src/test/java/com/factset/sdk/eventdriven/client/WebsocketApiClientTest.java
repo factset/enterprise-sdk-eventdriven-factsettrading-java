@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -182,11 +183,11 @@ public class WebsocketApiClientTest {
             return null;
         });
 
-        ConfigurationResponse response = client.connectAsync().thenCompose(c ->
-                c.request(request, ConfigurationResponse.class)
+        Message message = client.connectAsync().thenCompose(c ->
+                c.request(request)
         ).join();
 
-        Assertions.assertEquals(expectedResponse, response);
+        Assertions.assertEquals(expectedResponse, message.parseAs(ConfigurationResponse.class));
     }
 
     @Test
@@ -208,8 +209,8 @@ public class WebsocketApiClientTest {
         });
 
         try {
-            client.connectAsync().thenCompose(c ->
-                    c.request(request, ConfigurationResponse.class)
+            Message join = client.connectAsync().thenCompose(c ->
+                    c.request(request)
             ).join();
 
             fail("should not complete normally");
@@ -230,7 +231,7 @@ public class WebsocketApiClientTest {
             client.connectAsync().thenCompose(c ->
                     // the actual response class does not matter here, as we should
                     // get the timeout after a while
-                    c.request(request, ConfigurationResponse.class)
+                    c.request(request)
             ).get();
 
             fail("should not complete normally");
@@ -243,16 +244,7 @@ public class WebsocketApiClientTest {
     @Test
     @Timeout(2)
     public void subscribe_happy_path() throws Exception {
-        AtomicInteger eventId = new AtomicInteger(0);
-        when(mockWebsocket.send(contains("ExampleSubscriptionRequest"))).thenAnswer(invocation -> {
-            int id = extractIdFromJson(invocation.getArgument(0));
-            eventId.set(id);
-
-            // send immediate Ack
-            AckResponse ack = new AckResponse();
-            ack.meta.id = id;
-            sendMessageToClient(ack);
-
+        mockAckResponseTo("ExampleSubscriptionRequest", id -> {
             // send some events
             AtomicInteger count = new AtomicInteger(0);
             Runnable r = () -> {
@@ -262,18 +254,16 @@ public class WebsocketApiClientTest {
             scheduler.schedule(r, 50, TimeUnit.MILLISECONDS);
             scheduler.schedule(r, 70, TimeUnit.MILLISECONDS);
             scheduler.schedule(r, 90, TimeUnit.MILLISECONDS);
-
-            return null;
         });
 
         client.connectAsync().join();
 
-        List<ExampleSubscriptionEvent> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
                 new ExampleSubscriptionRequest(),
-                ExampleSubscriptionEvent.class,
+
                 (event, ex) -> {
                     if (ex != null) exception.set(ex);
                     events.add(event);
@@ -283,29 +273,24 @@ public class WebsocketApiClientTest {
         Thread.sleep(100);
 
         assertNull(exception.get());
-        assertEquals(
-                Arrays.asList(
-                        ExampleSubscriptionEvent.create(eventId.get(), 1),
-                        ExampleSubscriptionEvent.create(eventId.get(), 2),
-                        ExampleSubscriptionEvent.create(eventId.get(), 3)
-                ),
-                events
-        );
+
+
+        ExampleSubscriptionEvent m1 = events.get(0).parseAs(ExampleSubscriptionEvent.class);
+        ExampleSubscriptionEvent m2 = events.get(1).parseAs(ExampleSubscriptionEvent.class);
+        ExampleSubscriptionEvent m3 = events.get(2).parseAs(ExampleSubscriptionEvent.class);
+
+        assertEquals(m1.getData().getNumber(), 1);
+        assertEquals(m2.getData().getNumber(), 2);
+        assertEquals(m3.getData().getNumber(), 3);
+
+
     }
 
     @Test
     @Timeout(2)
     public void subscribe_with_error_response() throws Exception {
         AtomicInteger eventId = new AtomicInteger(0);
-        when(mockWebsocket.send(contains("ExampleSubscriptionRequest"))).thenAnswer(invocation -> {
-            int id = extractIdFromJson(invocation.getArgument(0));
-            eventId.set(id);
-
-            // send immediate Ack
-            AckResponse ack = new AckResponse();
-            ack.meta.id = id;
-            sendMessageToClient(ack);
-
+        mockAckResponseTo("ExampleSubscriptionRequest", id -> {
             // send some events
             AtomicInteger count = new AtomicInteger(0);
             Runnable r = () -> {
@@ -321,18 +306,16 @@ public class WebsocketApiClientTest {
 
             scheduler.schedule(r, 50, TimeUnit.MILLISECONDS);
             scheduler.schedule(r, 70, TimeUnit.MILLISECONDS);
-
-            return null;
         });
 
         client.connectAsync().join();
 
-        List<ExampleSubscriptionEvent> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
                 new ExampleSubscriptionRequest(),
-                ExampleSubscriptionEvent.class,
+
                 (event, ex) -> {
                     if (ex != null) exception.set(ex);
                     events.add(event);
@@ -342,13 +325,12 @@ public class WebsocketApiClientTest {
         Thread.sleep(100);
 
         assertInstanceOf(ErrorResponseException.class, exception.get());
-        assertEquals(
-                Arrays.asList(
-                        ExampleSubscriptionEvent.create(eventId.get(), 1),
-                        null
-                ),
-                events
-        );
+
+
+        ExampleSubscriptionEvent m1 = events.get(0).parseAs(ExampleSubscriptionEvent.class);
+        Message m2 = events.get(1);
+        assertEquals(m1.getData().getNumber(), 1);
+        assertNull(m2);
     }
 
     @Test
@@ -361,22 +343,16 @@ public class WebsocketApiClientTest {
             return null;
         });
 
-        when(mockWebsocket.send(contains("ExampleSubscriptionRequest"))).thenAnswer(invocation -> {
-            AckResponse ack = new AckResponse();
-            ack.meta.id = extractIdFromJson(invocation.getArgument(0));
-            sendMessageToClient(ack);
-
-            return null;
-        });
+        mockAckResponseTo("ExampleSubscriptionRequest");
 
         client.connectAsync().join();
 
-        List<ExampleSubscriptionEvent> events = Collections.synchronizedList(new ArrayList<>());
+        List<Message> events = Collections.synchronizedList(new ArrayList<>());
         AtomicReference<Throwable> exception = new AtomicReference<>();
 
         client.subscribe(
                 new ExampleSubscriptionRequest(),
-                ExampleSubscriptionEvent.class,
+
                 (event, ex) -> {
                     if (ex != null) exception.set(ex);
                     events.add(event);
@@ -394,19 +370,13 @@ public class WebsocketApiClientTest {
     }
 
     @Test
-    public void unsubscribe_works() {
-        when(mockWebsocket.send(contains("ExampleSubscriptionRequest"))).thenAnswer(invocation -> {
-            AckResponse ack = new AckResponse();
-            ack.meta.id = extractIdFromJson(invocation.getArgument(0));
-            sendMessageToClient(ack);
-
-            return null;
-        });
+    public void unsubscribe_sends_UnsubscribeRequest() {
+        mockAckResponseTo("ExampleSubscriptionRequest");
 
         client.connectAsync().join();
         Subscription subscription = client.subscribe(
                 new ExampleSubscriptionRequest(),
-                ExampleSubscriptionEvent.class, (e, t) -> {
+                (e, t) -> {
                 }
         ).join();
 
@@ -414,6 +384,57 @@ public class WebsocketApiClientTest {
 
         verify(mockWebsocket).send(contains("UnsubscribeRequest"));
     }
+
+    @Test
+    public void unsubscribe_removes_listener() throws Exception {
+        // respond with Ack to ExampleSubscriptionRequest and store id
+        AtomicInteger subscriptionId = new AtomicInteger(0);
+        mockAckResponseTo("ExampleSubscriptionRequest", subscriptionId::set);
+
+        // respond with Ack to UnsubscribeRequest, then simulate an event sent to the subscription
+        mockAckResponseTo("UnsubscribeRequest", ignored -> {
+            scheduler.schedule(() -> {
+                sendMessageToClient(ExampleSubscriptionEvent.create(subscriptionId.get(), 123));
+            }, 10, TimeUnit.MILLISECONDS);
+        });
+
+        client.connectAsync().join();
+
+        List<Message> seenEvents = Collections.synchronizedList(new ArrayList<>());
+        Subscription subscription = client.subscribe(
+                new ExampleSubscriptionRequest(),
+                (e, t) -> {
+                    seenEvents.add(e);
+                }
+        ).join();
+
+        // cancel subscription and wait for the Ack
+        subscription.cancel().join();
+
+        // wait for the simulated event above to arrive
+        Thread.sleep(20);
+        assertEquals(Collections.emptyList(), seenEvents, "Events received after unsubscribe, should be ignored.");
+    }
+
+    private void mockAckResponseTo(String messageType) {
+        mockAckResponseTo(messageType, i -> {
+        });
+    }
+
+    private void mockAckResponseTo(String messageType, Consumer<Integer> doAfterAck) {
+        when(mockWebsocket.send(contains(messageType))).thenAnswer(invocation -> {
+            int id = extractIdFromJson(invocation.getArgument(0));
+
+            AckResponse ack = new AckResponse();
+            ack.getMeta().setId(id);
+            sendMessageToClient(ack);
+
+            doAfterAck.accept(id);
+
+            return null;
+        });
+    }
+
 
     private int extractIdFromJson(String json) {
         Pattern regex = Pattern.compile("\"id\":([0-9]+)");
