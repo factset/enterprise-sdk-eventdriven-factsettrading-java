@@ -11,4 +11,11 @@ public class ErrorResponseException extends ApiClientException {
         super("Received an ErrorResponse");
         this.errorList = errorList;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorResponseException{" +
+                "errorList=" + errorList +
+                '}';
+    }
 }
