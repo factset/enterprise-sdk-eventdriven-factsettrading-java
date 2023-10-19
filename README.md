@@ -98,6 +98,9 @@ import com.factset.sdk.utils.authentication.ConfidentialClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Console {
 
     private static final Logger logger = LoggerFactory.getLogger("main");
@@ -117,13 +120,18 @@ public class Console {
         OrderUpdateApi api = new OrderUpdateApi(client);
 
         // subscribe to order updates
-        Subscription subscription = api.subscribeOrderUpdates((update, t) -> {
-            if (t != null) {
-                logger.warn("something went wrong: {}", t.getMessage());
-            } else {
-                logger.info("order update: {}", update);
-            }
-        }).join();
+        List<String> subscribeList = Collections.singletonList("orderupdates");
+        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
+
+        Subscription subscription = api.subscribeOrderUpdates(request)
+                .onOrderUpdateEvent((orderUpdateEvent) -> {
+                    logger.info(orderUpdateEvent.toString());
+                })
+                .onError((exception) -> {
+                    logger.error(exception.toString());
+                })
+                .subscribe()
+                .join();
 
         // wait
         Thread.sleep(10000);
@@ -131,7 +139,7 @@ public class Console {
         // cancel the subscription
         subscription.cancel();
 
-        // close the websocket connection        
+        // close the websocket connection
         client.disconnectAsync().join();
     }
 }

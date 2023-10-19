@@ -266,7 +266,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
                 return;
             }
 
-            logger.debug("Received Unhandled Message: {}", meta.getType());
+            logger.debug("Received Unhandled Message: {}", meta.type);
 
         } catch (JsonProcessingException | NullPointerException e) {
             logger.error("Could not parse incoming message: {} message={}", e, message);
@@ -274,7 +274,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleSystemMessages(IncomingMessage message) throws JsonProcessingException {
-        switch (message.meta.getType()) {
+        switch (message.meta.type) {
             case "KeepAliveRequest":
                 return handleKeepAliveRequest(message.json);
             default:
@@ -286,7 +286,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
         logger.debug("Handle KeepAliveRequest");
 
         KeepAliveRequest keepAliveRequest = jsonParser.readValue(message, KeepAliveRequest.class);
-        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.getMeta().getId());
+        KeepAliveResponse keepAliveResponse = KeepAliveResponse.create(keepAliveRequest.meta.getId());
         send(keepAliveResponse);
 
         connectionIsAlive = true;
@@ -295,12 +295,12 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private boolean handleApiMessage(IncomingMessage message) {
-        MessageListener listener = messageListeners.get(message.meta.getId());
+        MessageListener listener = messageListeners.get(message.meta.id);
         if (listener == null) {
             return false;
         }
 
-        if ("ErrorResponse".equals(message.meta.getType())) {
+        if ("ErrorResponse".equals(message.meta.type)) {
             handleErrorResponse(message, listener);
         } else {
             listener.accept(message, null);
@@ -310,7 +310,7 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
     }
 
     private void handleErrorResponse(IncomingMessage message, MessageListener listener) {
-        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.getId());
+        logger.debug("Got an ErrorResponse for subscription with id: {}", message.meta.id);
 
         try {
             ErrorResponse errorResponse = jsonParser.readValue(message.json, ErrorResponse.class);
@@ -319,8 +319,8 @@ public class WebsocketApiClient implements EventDrivenApiClient, ConnectableApiC
             listener.accept(null, new MalformedMessageException(e));
         }
 
-        logger.debug("Remove subscription listener for id: {}", message.meta.getId());
-        messageListeners.remove(message.meta.getId());
+        logger.debug("Remove subscription listener for id: {}", message.meta.id);
+        messageListeners.remove(message.meta.id);
     }
 
     @Override

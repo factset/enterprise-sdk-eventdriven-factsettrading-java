@@ -19,12 +19,6 @@ public class OrderUpdateApi {
         this.client = client;
     }
 
-//    public CompletableFuture<Subscription> subscribeOrderUpdates(BiConsumer<OrderUpdateEvent, Throwable> callback) {
-//        List<String> subscribeList = Arrays.asList("orderupdates");
-//        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
-//        return client.subscribe(request, OrderUpdateEvent.class, callback);
-//    }
-
     public OrderUpdateSubscription subscribeOrderUpdates(OrderSubscriptionRequest request) {
         return new OrderUpdateSubscription(request);
     }
