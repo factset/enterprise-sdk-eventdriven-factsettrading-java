@@ -111,7 +111,7 @@ public class Console {
         // initialize the websocket client
         WebsocketApiClient client = new WebsocketApiClient(
                 WebsocketApiClient.Options.builder()
-                        .url("http://api.factset.com/streaming/trading/ems/v0")
+                        .url("https://api.factset.com/streaming/trading/ems/v0")
                         .authorizer(confidentialClient)
                         .maximumIdleInterval(Duration.ofSeconds(30))
                         .build()
