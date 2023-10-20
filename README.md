@@ -141,7 +141,7 @@ public class Console {
                 .join();
 
         // wait
-        Thread.sleep(100000);
+        Thread.sleep(10000);
 
         // cancel the subscription
         subscription.cancel();
