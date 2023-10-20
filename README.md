@@ -91,13 +91,13 @@ Snapshot releases are cached by gradle for some time, for details see: [Gradle D
 ```java
 package com.factset.sdk.console;
 
-import com.factset.sdk.eventdriven.client.Subscription;
-import com.factset.sdk.eventdriven.client.WebsocketApiClient;
 import com.factset.sdk.eventdriven.factsettrading.OrderUpdateApi;
+import com.factset.sdk.eventdriven.factsettrading.model.OrderSubscriptionRequest;
 import com.factset.sdk.utils.authentication.ConfidentialClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
@@ -113,19 +113,26 @@ public class Console {
                 WebsocketApiClient.Options.builder()
                         .url("https://api.factset.com/streaming/trading/ems/v0")
                         .authorizer(confidentialClient)
+                        .maximumIdleInterval(Duration.ofSeconds(30))
                         .build()
         ).connectAsync().join();
 
         // initialize the order update api
         OrderUpdateApi api = new OrderUpdateApi(client);
 
-        // subscribe to order updates
-        List<String> subscribeList = Collections.singletonList("orderupdates");
+        // subscribe to order updates,
+        // possible values of subscription are "inboundOutboundParentOrders", "inboundOrders", "parentOrders", "outboundOrders"
+        List<String> subscribeList = Collections.singletonList("inboundOutboundParentOrders");
         OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
 
         Subscription subscription = api.subscribeOrderUpdates(request)
-                .onOrderUpdateEvent((orderUpdateEvent) -> {
-                    logger.info(orderUpdateEvent.toString());
+                .onSnapshotEvent((snapshotEvent) -> {
+                    // clients logic of handling the snapshotEvent message goes here
+                    logger.info(snapshotEvent.toString());
+                })
+                .onTradeEvent((tradeEvent) -> {
+                    // clients logic of handling the tradeEvent message goes here
+                    logger.info(tradeEvent.toString());
                 })
                 .onError((exception) -> {
                     logger.error(exception.toString());
