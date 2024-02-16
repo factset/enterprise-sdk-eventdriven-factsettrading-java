@@ -18,7 +18,7 @@ public class ExecutionEvent {
     String executionReferenceId;
     ExecutionTransactionType executionTransactionType;
     IdSource idSource;
-    LastCapacity lastCapacity;
+    String lastCapacity;
     String lastMarket;
     Double lastPrice;
     Double lastQuantity;
