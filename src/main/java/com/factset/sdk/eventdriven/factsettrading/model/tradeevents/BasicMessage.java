@@ -29,7 +29,7 @@ public class BasicMessage {
     Boolean transmit;
     String destName;
     Map<String, Map<Integer, Integer>> repeatingGroups;
-    Map<String, Integer> userDefinedFields;
+    Map<Integer, String> userDefinedFields;
     String customFields;
 }
 

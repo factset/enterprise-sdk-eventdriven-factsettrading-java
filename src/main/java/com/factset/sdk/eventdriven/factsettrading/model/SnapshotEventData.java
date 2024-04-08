@@ -7,10 +7,8 @@ import lombok.Data;
 @Data
 public class SnapshotEventData {
     Integer seqNo;
-    Boolean isDone;
     String requestId;
-    InitialLoadType initialLoadType;
     OrderUpdateEvent inboundOrderSnapshot;
     ParentOrderUpdateEvent parentOrderSnapshot;
-    OrderUpdateEvent outboundOrderSnapshot;
+    OrderUpdateEvent childOrderSnapshot;
 }

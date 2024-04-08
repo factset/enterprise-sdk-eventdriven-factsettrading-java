@@ -12,7 +12,7 @@ public class OrderReplaceEvent {
     CommissionType commissionType;
     String currency;
     ExecutionInstruction executionInstruction;
-    HandlingInstruction handlingInstruction;
+    HandlingInstruction handlingInstructions;
     IdSource idSource;
     String ioiId;
     String orderId;
