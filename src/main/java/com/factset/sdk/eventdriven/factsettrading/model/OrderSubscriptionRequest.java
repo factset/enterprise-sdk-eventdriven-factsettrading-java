@@ -1,5 +1,6 @@
 package com.factset.sdk.eventdriven.factsettrading.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,10 +17,11 @@ public class OrderSubscriptionRequest {
 
     @Data
     public static class SubscriptionData {
-        Subscribe subscribe = new Subscribe();
+        Subscribe subscribe = Subscribe.builder().build();
     }
 
     @Data
+    @Builder
     public static class Subscribe{
         boolean inboundOrders;
         boolean parentOrders;

@@ -121,12 +121,13 @@ public class Console {
         OrderUpdateApi api = new OrderUpdateApi(client);
 
         // subscribe to order updates
-        OrderSubscriptionRequest.Subscribe subscribe = new OrderSubscriptionRequest.Subscribe();
-        subscribe.setInboundOrders(true);
-        subscribe.setChildOrders(true);
-        subscribe.setParentOrders(true);
-        subscribe.setInboundMessages(true);
-        subscribe.setChildMessages(true);
+        OrderSubscriptionRequest.Subscribe subscribe = OrderSubscriptionRequest.Subscribe.builder()
+                .inboundOrders(true)
+                .parentOrders(true)
+                .childOrders(true)
+                .inboundMessages(true)
+                .childMessages(true)
+                .build();
         OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribe);
 
         Subscription subscription = api.subscribeOrderUpdates(request)
