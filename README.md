@@ -23,7 +23,7 @@ Add the below dependency to the project's POM:
 <dependency>
     <groupId>com.factset.sdk.eventdriven</groupId>
     <artifactId>factsettrading</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.factset.sdk.eventdriven:factsettrading:1.0.0"
+    implementation "com.factset.sdk.eventdriven:factsettrading:2.0.0-SNAPSHOT"
 }
 ```
 
@@ -120,10 +120,15 @@ public class Console {
         // initialize the order update api
         OrderUpdateApi api = new OrderUpdateApi(client);
 
-        // subscribe to order updates,
-        // possible values of subscription are "inboundOutboundParentOrders", "inboundOrders", "parentOrders", "outboundOrders"
-        List<String> subscribeList = Collections.singletonList("inboundOutboundParentOrders");
-        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribeList);
+        // subscribe to order updates
+        OrderSubscriptionRequest.Subscribe subscribe = OrderSubscriptionRequest.Subscribe.builder()
+                .inboundOrders(true)
+                .parentOrders(true)
+                .childOrders(true)
+                .inboundMessages(true)
+                .childMessages(true)
+                .build();
+        OrderSubscriptionRequest request = new OrderSubscriptionRequest(subscribe);
 
         Subscription subscription = api.subscribeOrderUpdates(request)
                 .onSnapshotEvent((snapshotEvent) -> {

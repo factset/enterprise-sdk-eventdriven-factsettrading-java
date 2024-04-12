@@ -14,7 +14,7 @@ public class Error {
     private String code;
     private String title;
     private Links links;
-    private String details;
+    private String detail;
     private Source source;
 
     @Data

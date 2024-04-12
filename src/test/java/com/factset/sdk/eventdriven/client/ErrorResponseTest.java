@@ -48,7 +48,7 @@ public class ErrorResponseTest {
 
     @Test
     void fromJsonWithFullError() throws JsonProcessingException {
-        String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"ErrorResponse\",\"timeout\":0},\"errors\":[{\"id\":\"test-id\",\"code\":\"test-code\",\"title\":\"test-title\",\"links\":{\"about\":\"test-about\"},\"details\":\"test-details\",\"source\":{\"pointer\":\"test-pointer\",\"parameter\":\"test-parameter\"}}]}";
+        String jsonResponse = "{\"meta\":{\"id\":1,\"type\":\"ErrorResponse\",\"timeout\":0},\"errors\":[{\"id\":\"test-id\",\"code\":\"test-code\",\"title\":\"test-title\",\"links\":{\"about\":\"test-about\"},\"detail\":\"test-details\",\"source\":{\"pointer\":\"test-pointer\",\"parameter\":\"test-parameter\"}}]}";
         ErrorResponse response = json.readValue(jsonResponse, ErrorResponse.class);
         Assertions.assertEquals(1, response.errors.size());
 
@@ -61,7 +61,7 @@ public class ErrorResponseTest {
                 .about("test-about")
                 .build();
         error.setLinks(links);
-        error.setDetails("test-details");
+        error.setDetail("test-details");
 
         Error.Source source = Error.Source.builder()
                 .parameter("test-parameter")

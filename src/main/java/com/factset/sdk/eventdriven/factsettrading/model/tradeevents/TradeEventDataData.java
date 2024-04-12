@@ -22,4 +22,6 @@ public class TradeEventDataData {
     OrderReplaceEvent orderReplace;
     OrderStatusEvent orderStatus;
     CancelRejectEvent cancelReject;
+
+    String eventTime;
 }

@@ -1,9 +1,10 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+
 import com.factset.sdk.eventdriven.factsettrading.model.enums.*;
 import lombok.Data;
 
 @Data
-public class OrderUpdateEvent {
+public class NewOrderEvent {
     BasicMessage basicMessage;
     String account;
     String clientOrderId;
@@ -16,14 +17,14 @@ public class OrderUpdateEvent {
     String ioiId;
     String orderId;
     Double orderQuantity;
-    String orderStatus;
+    OrderStatus orderStatus;
     OrderType orderType;
     String originalClientOrderId;
     Double price;
     Rule80A rule80A;
     String securityId;
-    String symbol;
     Side side;
+    String symbol;
     String text;
     TimeInForce timeInForce;
     String transactTime;
@@ -68,18 +69,15 @@ public class OrderUpdateEvent {
     Product product;
     String cfiCode;
     Double price2;
+    String key;
+    String sendingDate;
     Integer pegSelectionIndex;
-    CancelType cancelType;
+    String cancelType;
     Double bidPrice;
     Double askPrice;
     Double lastPrice;
     Integer bidSize;
     Integer askSize;
+    Integer volume;
     String ticketId;
-    Double executedQuantity;
-    Double averagePrice;
-    Double leavesQuantity;
-    Double executedValue;
-    ChildMessage[] childMessage;
-    Boolean containsAllChildMessages;
 }
