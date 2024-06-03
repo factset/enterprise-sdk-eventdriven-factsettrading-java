@@ -81,5 +81,6 @@ public class OrderUpdateEvent {
     Double leavesQuantity;
     Double executedValue;
     ChildMessage[] childMessage;
+    ChildMessage[] inboundMessage;
     Boolean containsAllChildMessages;
 }
