@@ -23,7 +23,7 @@ Add the below dependency to the project's POM:
 <dependency>
     <groupId>com.factset.sdk.eventdriven</groupId>
     <artifactId>factsettrading</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
