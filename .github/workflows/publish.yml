@@ -2,12 +2,12 @@ name: Publish
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   deploy:
     name: Deploy to package index
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     env:
       MAVEN_SNAPSHOTS_URL: ${{ vars.OSSRH_SNAPSHOT_URL }}
       MAVEN_RELEASES_URL: ${{ vars.OSSRH_RELEASE_URL }}
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: '8'
+          java-version: "8"
 
       - name: Decode signing key ring
         run: |
