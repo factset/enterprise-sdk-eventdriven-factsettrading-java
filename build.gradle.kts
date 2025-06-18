@@ -1,7 +1,10 @@
+import java.time.LocalDate
+
 plugins {
     java
     `maven-publish`
     signing
+    id("org.jreleaser") version "1.17.0"
 }
 
 group = "com.factset.sdk.eventdriven"
@@ -57,12 +60,13 @@ tasks.jar {
     }
 }
 
-// https://docs.gradle.org/current/userguide/publishing_maven.html
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
+val releasesRepoUrl = layout.buildDirectory.dir("repos/releases")
+val snapshotsRepoUrl = layout.buildDirectory.dir("repos/snapshots")
 
-            // dependencies
+// Configure publishing
+configure<PublishingExtension> {
+    publications {
+        register<MavenPublication>("maven") {
             from(components["java"])
 
             versionMapping {
@@ -77,14 +81,13 @@ publishing {
             pom {
                 name.set("FactSet Trading event-driven client library for Java")
                 description.set("Event-driven api client for the FactSet Trading API")
-                url.set("https://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java")
+                url.set("https://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java/")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0'")
                         url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
-
                 developers {
                     developer {
                         id.set("enterprisesdk")
@@ -92,7 +95,6 @@ publishing {
                         organizationUrl.set("https://developer.factset.com")
                     }
                 }
-
                 scm {
                     connection.set("scm:git:git://github.com/factset/enterprise-sdk-eventdriven-factsettrading-java.git")
                     developerConnection.set("scm:git:ssh://factset/enterprise-sdk-eventdriven-factsettrading-java.git")
@@ -104,47 +106,56 @@ publishing {
 
     repositories {
         maven {
-            var releasesRepoUrlEnv = System.getenv("MAVEN_RELEASES_URL")
-            var snapshotsRepoUrlEnv = System.getenv("MAVEN_SNAPSHOTS_URL")
-            var usernameEnv = System.getenv("MAVEN_USERNAME")
-            var passwordEnv = System.getenv("MAVEN_PASSWORD")
-
-            if (releasesRepoUrlEnv == null) {
-                releasesRepoUrlEnv = ""
-                project.logger.error("MAVEN_RELEASES_URL not set")
-            }
-
-            if (snapshotsRepoUrlEnv == null) {
-                snapshotsRepoUrlEnv = ""
-                project.logger.error("MAVEN_SNAPSHOTS_URL not set")
-            }
-
-            if (usernameEnv == null) {
-                usernameEnv = ""
-                project.logger.error("MAVEN_USERNAME not set")
-            }
-
-            if (passwordEnv == null) {
-                passwordEnv = ""
-                project.logger.error("MAVEN_PASSWORD not set")
-            }
-
-            val releasesRepoUrl = uri(releasesRepoUrlEnv)
-            val snapshotsRepoUrl = uri(snapshotsRepoUrlEnv)
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-            credentials {
-                username = usernameEnv
-                password = passwordEnv
-            }
-
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            url = if (version.toString().endsWith("SNAPSHOT")) uri(snapshotsRepoUrl) else uri(releasesRepoUrl)
         }
+    }
+}
+
+configure<org.jreleaser.gradle.plugin.JReleaserExtension> {
+    gitRootSearch.set(true)
+    project {
+        description = "Event-driven api client for the FactSet Trading API"
+        authors = listOf("FactSet")
+        license = "APACHE-2.0"
+        inceptionYear = "2023"
+        vendor = "FactSet"
+        copyright = "Copyright (c) ${LocalDate.now().year} FactSet"
     }
 
     signing {
-        sign(publications["mavenJava"])
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored = true
+    }
+
+    release {
+        github { 
+            skipTag = true
+            skipRelease = true
+        }
+    }
+
+    deploy {
+        maven {
+            mavenCentral {
+                register("release-deploy") {
+                    active.set(org.jreleaser.model.Active.RELEASE)
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository(releasesRepoUrl.get().asFile.path)
+                }
+            }
+            nexus2 {
+                register("snapshot-deploy") {
+                    active.set(org.jreleaser.model.Active.SNAPSHOT)
+                    url = "https://central.sonatype.com/repository/maven-snapshots/"
+                    snapshotUrl = "https://central.sonatype.com/repository/maven-snapshots/"
+                    applyMavenCentralRules = true
+                    snapshotSupported = true
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository(snapshotsRepoUrl.get().asFile.path)
+                }
+            }
+        }
     }
 }
