@@ -23,7 +23,7 @@ Add the below dependency to the project's POM:
 <dependency>
     <groupId>com.factset.sdk.eventdriven</groupId>
     <artifactId>factsettrading</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 
@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.factset.sdk.eventdriven:factsettrading:2.0.1"
+    implementation "com.factset.sdk.eventdriven:factsettrading:2.0.2"
 }
 ```
 
