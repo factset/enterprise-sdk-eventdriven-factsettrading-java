@@ -42,7 +42,7 @@ dependencies {
 }
 
 tasks.test {
-    jvmArgs = "-Dnet.bytebuddy.experimental=true"
+    jvmArgs("-Dnet.bytebuddy.experimental=true")
     useJUnitPlatform()
 }
 
