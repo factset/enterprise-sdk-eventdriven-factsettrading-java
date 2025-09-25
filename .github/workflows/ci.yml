@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew clean
 
       - name: Build and test
-        run: ./gradlew build --info --console plain --refresh-dependencies --args='-Dnet.bytebuddy.experimental=true'
+        run: ./gradlew build --stacktrace --info --console plain --refresh-dependencies --args='-Dnet.bytebuddy.experimental=true'
 
   lint:
     name: Lint
