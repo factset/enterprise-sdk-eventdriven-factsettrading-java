@@ -1,4 +1,4 @@
-﻿package com.factset.sdk.eventdriven.factsettrading.model.tradeevents.repeatinggroup;
+package com.factset.sdk.eventdriven.factsettrading.model.tradeevents.repeatinggroup;
 
 import lombok.Data;
 
