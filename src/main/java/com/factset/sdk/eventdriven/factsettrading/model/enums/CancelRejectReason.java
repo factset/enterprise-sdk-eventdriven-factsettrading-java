@@ -8,8 +8,8 @@ public enum CancelRejectReason {
     unableToProcessOrderMassCancelRequest,
     origOrdModTime,
     duplicateClOrdId,
-    other,
     priceExceedsCurrentPrice,
     priceExceedsCurrentPriceBand,
-    invalidPriceIncrement
+    invalidPriceIncrement,
+    other
 }

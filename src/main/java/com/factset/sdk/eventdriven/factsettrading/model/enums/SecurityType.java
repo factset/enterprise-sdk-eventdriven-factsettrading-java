@@ -111,6 +111,7 @@ public enum SecurityType {
     taxAllocation,
     taxExemptCommercialPaper,
     taxableMunicipalCP,
+    municipalInterestBearingCommercialPaper,
     taxRevenueAnticipationNote,
     variableRateDemandNote,
     warrant,
