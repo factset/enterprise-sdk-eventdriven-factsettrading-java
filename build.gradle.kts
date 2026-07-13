@@ -27,8 +27,8 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    testRuntimeOnly("org.slf4j:slf4j-simple:2.0.17")
+    implementation("org.slf4j:slf4j-api:2.0.18")
+    testRuntimeOnly("org.slf4j:slf4j-simple:2.0.18")
 
     testImplementation("org.mockito:mockito-inline:4.11.0")
     testImplementation(platform("org.junit:junit-bom:5.13.4"))
