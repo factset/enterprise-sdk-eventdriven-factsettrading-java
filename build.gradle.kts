@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.factset.sdk.eventdriven"
-version = "2.0.2"
+version = "3.0.0-SNAPSHOT"
 
 java {
     withJavadocJar()
