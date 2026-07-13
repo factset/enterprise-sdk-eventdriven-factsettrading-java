@@ -31,8 +31,8 @@ dependencies {
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.18")
 
     testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation(platform("org.junit:junit-bom:5.13.4"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testImplementation(platform("org.junit:junit-bom:6.1.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.9.3")
 
     compileOnly("org.projectlombok:lombok:1.18.46")
