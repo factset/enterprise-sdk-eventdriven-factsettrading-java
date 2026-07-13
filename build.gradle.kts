@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
     implementation("com.factset.sdk:utils:1.+")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.20.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.22.1")
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.20")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
