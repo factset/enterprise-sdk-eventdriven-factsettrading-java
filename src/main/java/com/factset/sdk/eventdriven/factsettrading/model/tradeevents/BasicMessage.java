@@ -1,4 +1,5 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
+import com.factset.sdk.eventdriven.factsettrading.model.tradeevents.repeatinggroup.RepeatingGroup;
 import lombok.Data;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class BasicMessage {
     Integer direction;
     Boolean transmit;
     String destName;
-    Map<String, Map<Integer, Integer>> repeatingGroups;
+    Map<String, RepeatingGroup> repeatingGroups;
     Map<Integer, String> userDefinedFields;
     String customFields;
 }

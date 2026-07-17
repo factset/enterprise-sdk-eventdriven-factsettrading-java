@@ -7,5 +7,11 @@ public enum TimeInForce {
     immediateOrCancel,
     fillOrKill,
     goodTillCrossing,
-    goodTillDate
+    goodTillDate,
+    atTheClose,
+    goodThroughCrossing,
+    atCrossing,
+    goodForTime,
+    goodForAuction,
+    goodForThisMonth
 }

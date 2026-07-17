@@ -1,7 +1,4 @@
 package com.factset.sdk.eventdriven.factsettrading.model.tradeevents;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.OrderType;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.Side;
-import com.factset.sdk.eventdriven.factsettrading.model.enums.TimeInForce;
 import lombok.Data;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +6,8 @@ import java.util.Map;
 @Data
 public class ParentOrderUpdateEvent {
     ParentOrderKey id;
-    OrderType orderType;
-    Side side;
+    String orderType;
+    String side;
     Double totalQuantity;
     String customer;
     String account;
@@ -43,7 +40,7 @@ public class ParentOrderUpdateEvent {
     Double executedQuantity;
     Double executedValue;
     Double averagePrice;
-    TimeInForce timeInForce;
+    String timeInForce;
     String creationTime;
     String directedBrokers;
     String restrictedBrokers;

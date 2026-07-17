@@ -18,5 +18,14 @@ public enum ExecutionType {
     calculated,
     expired,
     restated,
-    pendingReplace
+    pendingReplace,
+    trade,
+    tradeCorrect,
+    tradeCancel,
+    orderStatus,
+    tradeInAClearingHold,
+    tradeHasBeenReleasedToClearing,
+    triggeredOrActivatedBySystem,
+    locked,
+    released
 }
