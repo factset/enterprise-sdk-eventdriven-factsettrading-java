@@ -17,10 +17,6 @@ java {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("http://central.maven.org/maven2/")
-        isAllowInsecureProtocol = true
-    }
 }
 
 dependencies {
